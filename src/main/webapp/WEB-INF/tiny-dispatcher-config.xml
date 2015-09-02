@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tiny>
-    <injector class="org.jcarvajal.marti.adapter.MartiAdapterDependencyInjector">
+    <injector class="org.jcarvajal.marti.adapter.MartiDependencyInjector">
         <param>
             <param-name>configFile</param-name>
             <param-value>WEB-INF/components.xml</param-value>

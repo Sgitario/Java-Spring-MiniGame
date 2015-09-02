@@ -4,7 +4,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import org.jcarvajal.marti.adapter.MartiAdapterDependencyInjector;
+import org.jcarvajal.marti.adapter.MartiDependencyInjector;
 import org.jcarvajal.tiny.exceptions.OnInitConfigurationException;
 import org.jcarvajal.tiny.injector.DependencyInjector;
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class ConfigurationDispatcherServletTest {
 	private void thenInjectorIsExpected() {
 		DependencyInjector injector = dispatcher.getInjector();
 		assertNotNull(injector);
-		assertTrue(injector instanceof MartiAdapterDependencyInjector);
-		assertEquals("WEB-INF/components.xml", ((MartiAdapterDependencyInjector) injector).getConfigFile());
+		assertTrue(injector instanceof MartiDependencyInjector);
+		assertEquals("WEB-INF/components.xml", ((MartiDependencyInjector) injector).getConfigFile());
 	}
 }

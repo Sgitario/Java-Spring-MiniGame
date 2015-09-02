@@ -2,7 +2,9 @@ package org.jcarvajal.utils.xmlparser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -34,6 +36,23 @@ public class XmlParser {
 		IOUtils.close(currentStream);
 	}
 	
+	public <T> List<T> listElementsByTagName(String elementName,
+			Parseable<T> parseable) {
+		
+		List<T> map = new ArrayList<T>(); 
+		NodeList nodes = doc.getElementsByTagName(elementName);
+		for (int index = 0; index < nodes.getLength(); index++) {
+			Node node = nodes.item(index);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				Element elem = (Element) node;
+				T value = parseable.parse(elem);
+				map.add(value);
+			}
+		}
+		
+		return map;
+	}
+	
 	public <T> Map<String, T> mapElementsByTagName(String elementName,
 			String key, Parseable<T> parseable) {
 		
@@ -61,6 +80,10 @@ public class XmlParser {
 		}
 		
 		return value;
+	}
+	
+	public static String readAttributeValue(Element element, String attrName) {
+		return element.getAttribute(attrName);
 	}
 	
 	public static String readElemValue(Element element, String paramName) {		

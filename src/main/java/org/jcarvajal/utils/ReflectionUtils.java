@@ -13,13 +13,24 @@ public class ReflectionUtils {
 	private static final Logger LOG = Logger.getLogger(
 			ReflectionUtils.class.getName());
 	
+	public static Class<?> createClass(String className) {
+		Class<?> clazz = null;
+		
+		try {
+			clazz = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			LOG.severe(String.format("Class %s cannot be found. Cause: %s", className, e.getMessage()));
+		}
+		
+		return clazz;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T createInstance(String className, 
 			Class<T> clazz, Map<String, String> params) {
 		T instance = null;
-		Class<?> clazzInstance;
 		try {
-			clazzInstance = Class.forName(className);
+			Class<?> clazzInstance = createClass(className);
 			if (clazz.isAssignableFrom(clazzInstance)) {
 				instance = (T) clazzInstance.newInstance();
 				
