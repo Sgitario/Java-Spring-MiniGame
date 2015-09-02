@@ -7,7 +7,7 @@
 		<servlet-class>org.jcarvajal.tiny.web.ConfigurationDispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/tiny-dispatcher-config.xml</param-value>
+			<param-value>WEB-INF/tiny-dispatcher-config.xml</param-value>
 		</init-param>
 	</servlet>
 

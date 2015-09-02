@@ -1,5 +1,7 @@
 package org.jcarvajal.tiny.config;
 
+import static org.jcarvajal.utils.xmlparser.XmlParser.readElemValue;
+
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,7 +9,10 @@ import java.util.Map.Entry;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import org.jcarvajal.utils.XmlParser;
+import org.jcarvajal.tiny.exceptions.OnInitConfigurationException;
+import org.jcarvajal.utils.xmlparser.Parseable;
+import org.jcarvajal.utils.xmlparser.StringParseable;
+import org.jcarvajal.utils.xmlparser.XmlParser;
 import org.w3c.dom.Element;
 
 /**
@@ -34,9 +39,9 @@ public class XmlWebConfiguration implements WebConfiguration {
 	/**
 	 * Read xml and allocate the servlet into memory.
 	 * 
-	 * @throws OnInitWebConfigurationException
+	 * @throws OnInitConfigurationException
 	 */
-	public void init() throws OnInitWebConfigurationException {
+	public void init() throws OnInitConfigurationException {
 		XmlParser parser = null;
 		try {
 			parser = new XmlParser(getFileStream(WEB_FILE));
@@ -47,7 +52,7 @@ public class XmlWebConfiguration implements WebConfiguration {
 			mappingServlets = linkMappingsWithServlets(mappings, servlets);
 
 		} catch (Exception e) {
-			throw new OnInitWebConfigurationException(e);
+			throw new OnInitConfigurationException(e);
 		} finally {
 			if (parser != null) {
 				parser.close();
@@ -67,20 +72,15 @@ public class XmlWebConfiguration implements WebConfiguration {
 			throws XPathExpressionException {
 		Map<String, Servlet> servlets = parser.mapElementsByTagName(SERVLET_NODES,
 				SERVLET_NAME,
-				new XmlParser.Parseable<Servlet>() {
+				new Parseable<Servlet>() {
 
 					public Servlet parse(Element elem) {
 						Servlet servlet = new Servlet();
-						servlet.setName(parser.readElemValue(elem, SERVLET_NAME));
-						servlet.setClassName(parser.readElemValue(elem, SERVLET_CLASS_NAME));
+						servlet.setName(readElemValue(elem, SERVLET_NAME));
+						servlet.setClassName(readElemValue(elem, SERVLET_CLASS_NAME));
 						servlet.setParams(parser.mapElementsByTagName(SERVLET_PARAMS,
 								SERVLET_PARAM_NAME,
-								new XmlParser.Parseable<String>() {
-				
-									public String parse(Element elem) {
-										return parser.readElemValue(elem, SERVLET_PARAM_VALUE);
-									}
-						}));
+								new StringParseable(SERVLET_PARAM_VALUE)));
 
 						return servlet;
 					}
@@ -92,12 +92,7 @@ public class XmlWebConfiguration implements WebConfiguration {
 	private Map<String, String> readMappings(final XmlParser parser) {
 		return parser.mapElementsByTagName(SERVLET_MAPPINGS,
 				SERVLET_MAPPING_URL_PATTERN,
-				new XmlParser.Parseable<String>() {
-
-					public String parse(Element elem) {
-						return parser.readElemValue(elem, SERVLET_NAME);
-					}
-		});
+				new StringParseable(SERVLET_NAME));
 	}
 	
 	private Map<String, Servlet> linkMappingsWithServlets(

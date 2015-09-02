@@ -1,11 +1,10 @@
 package org.jcarvajal.tiny.server;
 
-import java.lang.reflect.Field;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.jcarvajal.tiny.config.Servlet;
 import org.jcarvajal.tiny.web.DispatcherServlet;
+import org.jcarvajal.utils.ReflectionUtils;
 
 /**
  * Factory to isolate the build of Server instances.
@@ -61,6 +60,7 @@ public class ServerFactory {
 		
 		try {
 			DispatcherServlet handler = createDispatcher(servlet);
+			handler.init();
 			serverFacade.createContext(context, handler);
 		} catch (Exception ex) {
 			LOG.severe("Error creating handler. Cause: " + ex.getMessage());
@@ -69,25 +69,11 @@ public class ServerFactory {
 		return this;
 	}
 
-	private DispatcherServlet createDispatcher(Servlet servlet) 
-			throws ClassNotFoundException, InstantiationException, 
-			IllegalAccessException, NoSuchFieldException, SecurityException {
-		
-		DispatcherServlet dispatcher = null;
-		
-		Class<?> clazz = Class.forName(servlet.getClassName());
-		Object instance = clazz.newInstance();
-		if (instance instanceof DispatcherServlet) {
-			dispatcher = (DispatcherServlet) instance;
-			if (servlet.getParams() != null) {
-				for (Entry<String, String> param : servlet.getParams().entrySet()) {
-					Field field = clazz.getField(param.getKey());
-					if (field != null) {
-						field.set(instance, param.getValue());
-					}
-				}
-			}
-		} else {
+	private DispatcherServlet createDispatcher(Servlet servlet) {
+		DispatcherServlet dispatcher = ReflectionUtils.createInstance(
+				servlet.getClassName(), DispatcherServlet.class,
+				servlet.getParams());
+		if (dispatcher == null) {
 			LOG.severe("Servlet is not a Tiny dispatcher! Ignoring...");
 		}
 		

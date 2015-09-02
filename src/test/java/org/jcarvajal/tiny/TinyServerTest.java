@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jcarvajal.tiny.config.OnInitWebConfigurationException;
 import org.jcarvajal.tiny.config.Servlet;
 import org.jcarvajal.tiny.config.WebConfiguration;
+import org.jcarvajal.tiny.exceptions.OnInitConfigurationException;
 import org.jcarvajal.tiny.server.ServerFacade;
 import org.jcarvajal.tiny.server.ServerFactory;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class TinyServerTest {
 	private boolean actualServerStarted;
 	
 	@Before
-	public void setup() throws OnInitWebConfigurationException {
+	public void setup() throws OnInitConfigurationException {
 		mockServerFacade = mock(ServerFacade.class);
 		mockServerFactory = mock(ServerFactory.class);
 		mockWebConfiguration = mock(WebConfiguration.class);

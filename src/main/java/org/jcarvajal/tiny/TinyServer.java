@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.jcarvajal.tiny.config.OnInitWebConfigurationException;
 import org.jcarvajal.tiny.config.Servlet;
 import org.jcarvajal.tiny.config.WebConfiguration;
 import org.jcarvajal.tiny.config.XmlWebConfiguration;
+import org.jcarvajal.tiny.exceptions.OnInitConfigurationException;
 import org.jcarvajal.tiny.server.ServerFacade;
 import org.jcarvajal.tiny.server.ServerFactory;
 
@@ -31,18 +31,18 @@ public class TinyServer {
 	
 	/**
 	 * Initializes a new instace of the TinyServer class using the default port.
-	 * @throws OnInitWebConfigurationException 
+	 * @throws OnInitConfigurationException 
 	 */
-	public TinyServer() throws OnInitWebConfigurationException {
+	public TinyServer() throws OnInitConfigurationException {
 		this(DEFAULT_PORT);
 	}
 	
 	/**
 	 * Initializes a new instance of the TinyServer class by specifying a port.
 	 * @param port
-	 * @throws OnInitWebConfigurationException 
+	 * @throws OnInitConfigurationException 
 	 */
-	public TinyServer(int port) throws OnInitWebConfigurationException {
+	public TinyServer(int port) throws OnInitConfigurationException {
 		this.port = port;
 		this.config.init();
 	}

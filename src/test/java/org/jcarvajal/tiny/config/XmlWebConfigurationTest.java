@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Map;
 
+import org.jcarvajal.tiny.exceptions.OnInitConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,13 +23,13 @@ public class XmlWebConfigurationTest {
 	}
 	
 	@Test
-	public void getServlets_whenInit_thenExpectedServlet() throws OnInitWebConfigurationException {
+	public void getServlets_whenInit_thenExpectedServlet() throws OnInitConfigurationException {
 		whenInit();
 		whenGetServlets();
 		thenActualMappingsAreTheExpectedInXml();
 	}
 	
-	private void whenInit() throws OnInitWebConfigurationException {
+	private void whenInit() throws OnInitConfigurationException {
 		webConfiguration.init();
 	}
 	

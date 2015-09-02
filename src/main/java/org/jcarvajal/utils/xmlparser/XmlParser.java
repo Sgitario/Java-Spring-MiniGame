@@ -1,4 +1,4 @@
-package org.jcarvajal.utils;
+package org.jcarvajal.utils.xmlparser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jcarvajal.utils.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,10 +34,6 @@ public class XmlParser {
 		IOUtils.close(currentStream);
 	}
 	
-	public interface Parseable<T> {
-		public T parse(Element elem);
-	}
-	
 	public <T> Map<String, T> mapElementsByTagName(String elementName,
 			String key, Parseable<T> parseable) {
 		
@@ -55,13 +52,27 @@ public class XmlParser {
 		return map;
 	}
 	
-	public String readElemValue(Element element, String paramName) {
-		String value = null;
+	public <T> T readDocValue(String paramName, Parseable<T> parser) {
+		T value = null;
+		NodeList node = doc.getElementsByTagName(paramName);
+		if (node.getLength() > 0) {
+			Element elemParam = (Element) node.item(0);
+			value = parser.parse(elemParam);
+		}
+		
+		return value;
+	}
+	
+	public static String readElemValue(Element element, String paramName) {		
+		return readElemValue(element, paramName, new StringParseable());
+	}
+	
+	public static <T> T readElemValue(Element element, String paramName, Parseable<T> parser) {
+		T value = null;
 		NodeList node = element.getElementsByTagName(paramName);
 		if (node.getLength() > 0) {
 			Element elemParam = (Element) node.item(0);
-			NodeList textFNList = elemParam.getChildNodes();
-			value = ((Node) textFNList.item(0)).getNodeValue().trim();
+			value = parser.parse(elemParam);
 		}
 		
 		return value;
