@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<marti>
-    <repository implementedBy="org.jcarvaja.minigame.infrastructure.impl.MemorySessionRepositoryImpl"
-        name="org.jcarvaja.minigame.infrastructure.SessionRepository"></repository>
-    <repository implementedBy="org.jcarvaja.minigame.infrastructure.impl.MemoryScoreRepositoryImpl"
-        name="org.jcarvaja.minigame.infrastructure.ScoreRepository"></repository>
-    <service implementedBy="org.jcarvaja.minigame.service.impl.SessionServiceImpl"
-        name="org.jcarvaja.minigame.service.SessionService"></service>
-    <service implementedBy="org.jcarvaja.minigame.service.impl.ScoreServiceImpl"
-        name="org.jcarvaja.minigame.service.ScoreService"></service>
-</marti>
+<config>
+    <repository implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemorySessionRepositoryImpl"
+        name="org.jcarvajal.minigame.infrastructure.SessionRepository"></repository>
+    <repository implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl"
+        name="org.jcarvajal.minigame.infrastructure.ScoreRepository"></repository>
+    <service implementedBy="org.jcarvajal.minigame.service.impl.SessionServiceImpl"
+        name="org.jcarvajal.minigame.service.SessionService"></service>
+    <service implementedBy="org.jcarvajal.minigame.service.impl.ScoreServiceImpl"
+        name="org.jcarvajal.minigame.service.ScoreService"></service>
+</config>

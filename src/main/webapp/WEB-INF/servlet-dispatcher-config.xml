@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <injector class="org.jcarvajal.framework.di.ConfigDependencyInjectorImpl">
+        <param>
+            <param-name>configFile</param-name>
+            <param-value>WEB-INF/components.xml</param-value>
+        </param>
+    </injector>
+    
+    <controllers>
+        <controller class="org.jcarvaja.minigame.application.UserController"></controller>
+        <controller class="org.jcarvaja.minigame.application.LevelController"></controller>
+    </controllers>
+</config>
