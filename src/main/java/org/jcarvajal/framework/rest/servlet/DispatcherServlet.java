@@ -3,6 +3,8 @@ package org.jcarvajal.framework.rest.servlet;
 import java.io.OutputStream;
 import java.net.URI;
 
+import org.jcarvajal.framework.rest.exceptions.OnRequestException;
+import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.injector.DependencyInjector;
 import org.jcarvajal.framework.rest.servlet.controllers.AnnotationControllerManager;
@@ -34,9 +36,12 @@ public abstract class DispatcherServlet {
 	 * @param requestMethod
 	 * @param responseBody
 	 * @return
+	 * @throws OnRequestException 
 	 */
-	public abstract byte[] handle(URI requestURI, String requestMethod,
-			OutputStream responseBody);
+	public byte[] handle(URI requestURI, String requestMethod,
+			OutputStream responseBody) throws OnRequestException {		
+		return controllerManager.handle(requestURI.toString(), requestMethod);
+	}
 	
 	protected DependencyInjector getInjector() {
 		return injector;
@@ -58,8 +63,10 @@ public abstract class DispatcherServlet {
 	 * Register the controller instance.
 	 * @param controller
 	 * @throws OnRestInitializationException 
+	 * @throws OnRequestMappingInitializationException 
 	 */
-	protected void registerController(Object controller) throws OnRestInitializationException {
+	protected void registerController(Object controller) 
+			throws OnRestInitializationException, OnRequestMappingInitializationException {
 		if (controllerManager == null) {
 			throw new OnRestInitializationException("Manager of controllers is null");
 		}

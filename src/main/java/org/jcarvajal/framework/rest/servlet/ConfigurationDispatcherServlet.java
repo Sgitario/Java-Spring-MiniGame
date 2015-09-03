@@ -3,11 +3,10 @@ package org.jcarvajal.framework.rest.servlet;
 import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
 
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.injector.DependencyInjector;
 import org.jcarvajal.framework.utils.IOUtils;
@@ -54,14 +53,6 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 		} finally {
 			IOUtils.close(is);
 		}
-	}
-
-	public byte[] handle(URI requestURI, String requestMethod,
-			OutputStream responseBody) {
-		
-		
-		
-		return null;
 	}
 	
 	protected InputStream getFileStream(String file) throws OnRestInitializationException {
@@ -117,6 +108,9 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 						registerController(controller);
 					} catch (OnRestInitializationException e) {
 						LOG.severe(String.format("Error registering controller %s. Cause: %s",
+								className, e.getMessage()));
+					} catch (OnRequestMappingInitializationException e) {
+						LOG.severe(String.format("Error registering request handler %s. Cause: %s",
 								className, e.getMessage()));
 					}
 				}

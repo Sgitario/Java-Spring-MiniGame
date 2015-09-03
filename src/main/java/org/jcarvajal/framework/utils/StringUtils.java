@@ -25,4 +25,29 @@ public class StringUtils {
 		
 		return val;
 	}
+
+	/**
+	 * Count the number of characters in the string.
+	 * Example:
+	 * str= test
+	 * character= 't'
+	 * 
+	 * result = 2
+	 * 
+	 * @param str
+	 * @param character
+	 * @return
+	 */
+	public static int countCharacters(String str, char character) {
+		int count = 0;
+		if (isNotEmpty(str)) {
+			for (int index = 0; index < str.length(); index++) {
+				if (str.charAt(index) == character) {
+					count++;
+				}
+			}
+		}
+		
+		return count;
+	}
 }

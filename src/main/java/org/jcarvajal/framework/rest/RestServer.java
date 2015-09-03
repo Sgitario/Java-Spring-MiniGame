@@ -75,19 +75,6 @@ public class RestServer {
 		return this.server.isStarted();
 	}
 	
-	/**
-	 * Stop the server.
-	 * @return 'true' if the server is stopped.
-	 */
-	public boolean stop() {
-		boolean stopped = true;
-		if (this.server != null) {
-			stopped = this.server.stop();
-		}
-		
-		return stopped;
-	}
-	
 	private void bindServer() {
 		serverFactory.bindServer(this.port);
 	}

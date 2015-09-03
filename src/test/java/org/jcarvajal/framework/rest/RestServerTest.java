@@ -54,19 +54,6 @@ public class RestServerTest {
 		thenServerIsProperlyConfigured();
 	}
 	
-	@Test
-	public void stop_thenServerStopsIsCalled() throws OnRestInitializationException {
-		givenServerRunning();
-		whenServerStarts();
-		whenServerStops();
-		thenServerIsStopped();
-	}
-	
-	private void givenServerRunning() {
-		when(mockServerFacade.isStarted()).thenReturn(true);
-		when(mockServerFacade.stop()).thenReturn(true);
-	}
-	
 	private void givenServerCannotStart() {
 		when(mockServerFacade.start(anyInt())).thenReturn(false);
 	}
@@ -81,16 +68,8 @@ public class RestServerTest {
 		actualServerStarted = server.start();
 	}
 	
-	private void whenServerStops() {
-		server.stop();
-	}
-	
 	private void thenServerNotStarted() {
 		assertFalse(actualServerStarted);
-	}
-	
-	private void thenServerIsStopped() {
-		verify(mockServerFacade, times(1)).stop();
 	}
 	
 	private void thenServerIsProperlyConfigured() throws OnRestInitializationException {

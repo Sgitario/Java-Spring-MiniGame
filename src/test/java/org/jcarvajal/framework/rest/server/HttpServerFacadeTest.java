@@ -14,14 +14,12 @@ public class HttpServerFacadeTest {
 	private HttpServerFacade serverFacade;
 	
 	private boolean actualStarted;
-	private boolean actualStopped;
 	
 	@Before
 	public void setup() throws IOException {
 		HttpServerFacade realServerFacade = new HttpServerFacade();
 		serverFacade = spy(realServerFacade);
 		doNothing().when(serverFacade).startInternal(anyInt());
-		doNothing().when(serverFacade).stopInternal();
 	}
 	
 	@Test
@@ -29,7 +27,6 @@ public class HttpServerFacadeTest {
 		whenStart();
 		thenIsStarted();
 		thenStartInternalInvoked();
-		thenStopInternalNotInvoked();
 	}
 	
 	@Test
@@ -37,14 +34,6 @@ public class HttpServerFacadeTest {
 		givenExceptionAtStartServer();
 		whenStart();
 		thenIsNotStarted();
-	}
-	
-	@Test
-	public void stop_whenStarted_thenServerStops() throws IOException {
-		whenStart();
-		whenStop();
-		thenIsStopped();
-		thenStopInternalInvoked();
 	}
 	
 	private void givenExceptionAtStartServer() throws IOException {
@@ -55,10 +44,6 @@ public class HttpServerFacadeTest {
 		actualStarted = serverFacade.start(PORT);
 	}
 	
-	private void whenStop() {
-		actualStopped = serverFacade.stop();
-	}
-	
 	private void thenIsStarted() {
 		assertTrue(actualStarted);
 	}
@@ -67,23 +52,8 @@ public class HttpServerFacadeTest {
 		assertFalse(actualStarted);
 	}
 	
-	private void thenIsStopped() {
-		assertTrue(actualStopped);
-	}
-	
 	private void thenStartInternalInvoked() throws IOException {
 		verify(serverFacade, times(1)).startInternal(PORT);
 	}
-	
-	private void thenStopInternalInvoked() throws IOException {
-		thenStopInternalInvoked(1);
-	}
-	
-	private void thenStopInternalNotInvoked() throws IOException {
-		thenStopInternalInvoked(0);
-	}
-	
-	private void thenStopInternalInvoked(int n) throws IOException {
-		verify(serverFacade, times(n)).stopInternal();
-	}
+
 }

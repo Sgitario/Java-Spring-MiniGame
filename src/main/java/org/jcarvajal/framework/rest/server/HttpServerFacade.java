@@ -11,19 +11,16 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 
+@SuppressWarnings("restriction")
 public class HttpServerFacade implements ServerFacade {
 
 	private static final Logger LOG = Logger.getLogger(
 			HttpServerFacade.class.getName());
-	private static final int DELAY_TO_STOP = 100;
 	
 	private HttpServer server;
 	private boolean started = false;
 	
-	public synchronized boolean start(int port) {
-		// If started, stop it.
-		stop();
-		
+	public boolean start(int port) {		
 		// Start.
 		try {
 			startInternal(port);
@@ -35,18 +32,6 @@ public class HttpServerFacade implements ServerFacade {
 		}
 		
 		return this.started;
-	}
-
-	public boolean stop() {
-		// If started stop it.
-		if (isStarted()) {
-			stopInternal();
-			this.server = null;
-		}
-		
-		this.started = false;
-		
-		return !this.started;
 	}
 
 	public boolean isStarted() {
@@ -74,12 +59,6 @@ public class HttpServerFacade implements ServerFacade {
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
 		this.server.start();
-	}
-	
-	protected void stopInternal() {
-		if (this.server != null) {
-			this.server.stop(DELAY_TO_STOP);
-		}
 	}
 	
 	private void writeResponse(HttpExchange exchange, int code, String message) {

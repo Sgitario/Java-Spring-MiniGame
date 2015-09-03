@@ -16,12 +16,6 @@ public interface ServerFacade {
 	public boolean start(int port);
 	
 	/**
-	 * Stop the server.
-	 * @return
-	 */
-	public boolean stop();
-	
-	/**
 	 * @return 'true' if the server is listening. Otherwise, 'false'.
 	 */
 	public boolean isStarted();
