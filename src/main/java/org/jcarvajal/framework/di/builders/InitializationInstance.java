@@ -1,5 +1,6 @@
 package org.jcarvajal.framework.di.builders;
 
+import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
 
 /**
@@ -8,6 +9,10 @@ import org.jcarvajal.framework.di.exceptions.InstantiationException;
  * @author JoseCH
  */
 public class InitializationInstance extends Instance {
+	public InitializationInstance(DependencyInjectorBase injector) {
+		super(injector);
+	}
+
 	@Override
 	public void onInit() throws InstantiationException {
 		initializeInstance();

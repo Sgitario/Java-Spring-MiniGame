@@ -7,4 +7,12 @@ import org.jcarvajal.minigame.service.ScoreService;
 public class ScoreServiceImpl implements ScoreService {
 	@Autowired
 	private ScoreRepository scoreRepository;
+	
+	public void setScoreRepository(ScoreRepository scoreRepository) {
+		this.scoreRepository = scoreRepository;
+	}
+	
+	public ScoreRepository getScoreRepository() {
+		return scoreRepository;
+	}
 }

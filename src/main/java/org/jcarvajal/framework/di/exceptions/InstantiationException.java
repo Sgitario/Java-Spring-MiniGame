@@ -14,6 +14,14 @@ public class InstantiationException extends Exception {
 	 * @param instance Instance that cannot be created.
 	 */
 	public InstantiationException(Instance instance) {
-		super(String.format("Instance of %s cannot be created for %s", instance.getImplClazz(), instance.getBindClazzName()));
+		this("", instance);
+	}
+	
+	/**
+	 * Initializes a new instance of the InstantiationException class.
+	 * @param instance Instance that cannot be created.
+	 */
+	public InstantiationException(String message, Instance instance) {
+		super(String.format("%sInstance of %s cannot be created for %s", message, instance.getImplClazz(), instance.getBindClazzName()));
 	}
 }

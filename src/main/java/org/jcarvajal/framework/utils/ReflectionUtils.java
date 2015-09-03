@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 public class ReflectionUtils {
 	
 	private static final String SET = "set";
+	private static final String GET = "get";
 	
 	private static final Logger LOG = Logger.getLogger(
 			ReflectionUtils.class.getName());
@@ -36,7 +37,7 @@ public class ReflectionUtils {
 				
 				if (params != null) {
 					for (Entry<String, String> param : params.entrySet()) {
-						invokeSetField(clazzInstance, instance, param.getKey(), param.getValue());
+						invokeSetField(instance, param.getKey(), param.getValue());
 					}
 				}
 			}
@@ -48,16 +49,40 @@ public class ReflectionUtils {
 		return instance;
 	}
 	
-	private static void invokeSetField(Class<?> clazz, Object instance, 
+	public static void invokeSetField(Object instance, 
 			String fieldName, Object value) 
 					throws NoSuchMethodException, SecurityException, IllegalAccessException, 
 					IllegalArgumentException, InvocationTargetException {
 		if (value != null) {
-			Method method = clazz.getMethod(String.format("%s%s", 
-					SET, StringUtils.capitalize(fieldName)), value.getClass());
+			invokeSetField(instance, fieldName, value, value.getClass());
+		}
+	}
+	
+	public static void invokeSetField(Object instance, 
+			String fieldName, Object value, Class<?> valueInterface) 
+					throws NoSuchMethodException, SecurityException, IllegalAccessException, 
+					IllegalArgumentException, InvocationTargetException {
+		if (value != null && instance != null) {
+			Method method = instance.getClass().getMethod(String.format("%s%s", 
+					SET, StringUtils.capitalize(fieldName)), valueInterface);
 			if (method != null) {
 				method.invoke(instance, value);
 			}
 		}
+	}
+	
+	public static Object invokeGetField(Object instance, 
+			String fieldName) throws NoSuchMethodException, SecurityException, 
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Object value = null;
+		if (instance != null) {
+			Method method = instance.getClass().getMethod(String.format("%s%s", 
+					GET, StringUtils.capitalize(fieldName)));
+			if (method != null) {
+				value = method.invoke(instance);
+			}
+		}
+		
+		return value;
 	}
 }
