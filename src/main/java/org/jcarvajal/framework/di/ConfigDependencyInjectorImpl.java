@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
 import org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet;
+import org.jcarvajal.framework.utils.IOUtils;
 import org.jcarvajal.framework.utils.ReflectionUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
@@ -42,7 +43,9 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 			parseComponents(REPOSITORY_ELEM, parser);
 			parseComponents(SERVICE_ELEM, parser);
 		} catch (Exception ex) {
-			LOG.severe("Error when init Config Dependency Injector.");
+			LOG.severe("Error when init Config Dependency Injector. Cause: " + ex.getMessage());
+		} finally {
+			IOUtils.close(is);
 		}
 	}
 
@@ -55,11 +58,12 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 	}
 	
 	protected InputStream getFileStream(String file) throws OnDependencyInjectionInitializationException {
-		if (file == null) {
-			throw new OnDependencyInjectionInitializationException("Config file cannot be null.");
+		InputStream is = this.getClass().getResourceAsStream(file);
+		if (is == null) {
+			throw new OnDependencyInjectionInitializationException("Dependency Injection Config file cannot be found.");
 		}
 		
-		return this.getClass().getResourceAsStream(file);
+		return is;
 	}
 	
 	private synchronized void parseComponents(final String elem, final XmlParser parser) {
@@ -73,7 +77,8 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 					if (bindClazz != null) {
 						String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
 						
-						bind(bindClazz, implementedBy, parser.mapElementsByTagName(PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE)));
+						bind(bindClazz, implementedBy, 
+								parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE)));
 						
 					} else {
 						LOG.warning(String.format("Class %s not found. Ignoring.", bind));

@@ -3,6 +3,7 @@ package org.jcarvajal.framework.rest.server;
 import java.util.logging.Logger;
 
 import org.jcarvajal.framework.rest.config.Servlet;
+import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.servlet.DispatcherServlet;
 import org.jcarvajal.framework.utils.ReflectionUtils;
 
@@ -55,16 +56,13 @@ public class ServerFactory {
 	 * The class name is initialized using Reflection.
 	 * @param key
 	 * @param className
+	 * @throws OnRestInitializationException 
 	 */
-	public ServerFactory addContext(String context, Servlet servlet) {
+	public ServerFactory addContext(String context, Servlet servlet) throws OnRestInitializationException {
 		
-		try {
-			DispatcherServlet handler = createDispatcher(servlet);
-			handler.init();
-			serverFacade.createContext(context, handler);
-		} catch (Exception ex) {
-			LOG.severe("Error creating handler. Cause: " + ex.getMessage());
-		}
+		DispatcherServlet handler = createDispatcher(servlet);
+		handler.init();
+		serverFacade.createContext(context, handler);
 		
 		return this;
 	}

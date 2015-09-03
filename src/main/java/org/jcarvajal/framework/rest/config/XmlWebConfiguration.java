@@ -78,7 +78,9 @@ public class XmlWebConfiguration implements WebConfiguration {
 						Servlet servlet = new Servlet();
 						servlet.setName(readElemValue(elem, SERVLET_NAME));
 						servlet.setClassName(readElemValue(elem, SERVLET_CLASS_NAME));
-						servlet.setParams(parser.mapElementsByTagName(SERVLET_PARAMS,
+						servlet.setParams(parser.mapElementsByTagName(
+								elem, 
+								SERVLET_PARAMS,
 								SERVLET_PARAM_NAME,
 								new StringParseable(SERVLET_PARAM_VALUE)));
 

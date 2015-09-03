@@ -57,8 +57,9 @@ public class RestServer {
 	
 	/**
 	 * Start the server.
+	 * @throws OnRestInitializationException 
 	 */
-	public boolean start() {
+	public boolean start() throws OnRestInitializationException {
 		bindServer();
 		bindContexts();
 				
@@ -91,7 +92,7 @@ public class RestServer {
 		serverFactory.bindServer(this.port);
 	}
 	
-	private void bindContexts() {
+	private void bindContexts() throws OnRestInitializationException {
 		Map<String, Servlet> servlets = this.config.getServlets();
 		if (servlets != null) {
 			for (Entry<String, Servlet> entry : servlets.entrySet()) {

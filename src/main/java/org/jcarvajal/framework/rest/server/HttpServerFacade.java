@@ -11,7 +11,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 
-@SuppressWarnings("restriction")
 public class HttpServerFacade implements ServerFacade {
 
 	private static final Logger LOG = Logger.getLogger(
@@ -58,7 +57,7 @@ public class HttpServerFacade implements ServerFacade {
 		this.server.createContext(context, new HttpHandler() {
 
 			public void handle(HttpExchange exchange) throws IOException {
-				try {
+				try {					
 					byte[] response = handler.handle(exchange.getRequestURI(), 
 							exchange.getRequestMethod(), exchange.getResponseBody());
 					writeResponse(exchange, 200, response);
@@ -74,6 +73,7 @@ public class HttpServerFacade implements ServerFacade {
 	protected void startInternal(int port) throws IOException {
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+		this.server.start();
 	}
 	
 	protected void stopInternal() {

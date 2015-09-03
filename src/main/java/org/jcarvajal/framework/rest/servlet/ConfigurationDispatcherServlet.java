@@ -1,5 +1,7 @@
 package org.jcarvajal.framework.rest.servlet;
 
+import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -19,6 +21,7 @@ import org.w3c.dom.Element;
 public class ConfigurationDispatcherServlet extends DispatcherServlet {
 
 	private static final String INJECTOR = "injector";
+	private static final String CONTROLLER = "controller";
 	private static final String CLASS_ATTRIBUTE = "class";
 	private static final String PARAM = "param";
 	private static final String PARAM_KEY = "param-name";
@@ -26,7 +29,11 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 	private static final Logger LOG = Logger.getLogger(
 			ConfigurationDispatcherServlet.class.getName());
 	
-	protected String contextConfigLocation;
+	private String contextConfigLocation;
+	
+	public void setContextConfigLocation(String contextConfigLocation) {
+		this.contextConfigLocation = contextConfigLocation;
+	}
 
 	/**
 	 * Read the context config file.
@@ -49,11 +56,6 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 		}
 	}
 
-	private void parseControllers(XmlParser parser) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public byte[] handle(URI requestURI, String requestMethod,
 			OutputStream responseBody) {
 		
@@ -63,11 +65,12 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 	}
 	
 	protected InputStream getFileStream(String file) throws OnRestInitializationException {
-		if (file == null) {
-			throw new OnRestInitializationException("Config file cannot be null.");
+		InputStream is = this.getClass().getResourceAsStream(file);
+		if (is == null) {
+			throw new OnRestInitializationException("Servlet config file cannot be found.");
 		}
 		
-		return this.getClass().getResourceAsStream(file);
+		return is;
 	}
 	
 	/**
@@ -80,10 +83,10 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 			public DependencyInjector parse(Element elem) {
 				DependencyInjector injector = null;
 				if (elem != null) {
-					String className = elem.getAttribute(CLASS_ATTRIBUTE);
+					String className = readAttributeValue(elem, CLASS_ATTRIBUTE);
 					if (StringUtils.isNotEmpty(className)) {
 						Map<String, String> params = parser
-								.mapElementsByTagName(PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
+								.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
 						
 						injector = ReflectionUtils.createInstance(className, DependencyInjector.class, params);
 					} else {
@@ -95,6 +98,33 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 			}
 			
 		}));
+	}
+	
+	/**
+	 * Register a controller.
+	 * @param parser
+	 */
+	private void parseControllers(final XmlParser parser) {
+		parser.listElementsByTagName(CONTROLLER, new Parseable<Void>() {
+
+			public Void parse(Element elem) {
+				String className = readAttributeValue(elem, CLASS_ATTRIBUTE);
+				Map<String, String> params = parser
+						.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
+				Object controller = ReflectionUtils.createInstance(className, params);
+				if (controller != null) {
+					try {
+						registerController(controller);
+					} catch (OnRestInitializationException e) {
+						LOG.severe(String.format("Error registering controller %s. Cause: %s",
+								className, e.getMessage()));
+					}
+				}
+				
+				return null;
+			}
+			
+		});
 	}
 
 }

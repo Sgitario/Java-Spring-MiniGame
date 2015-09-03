@@ -41,21 +41,21 @@ public class RestServerTest {
 	}
 	
 	@Test
-	public void start_whenServerCannotStart_thenReturnFalse() {
+	public void start_whenServerCannotStart_thenReturnFalse() throws OnRestInitializationException {
 		givenServerCannotStart();
 		whenServerStarts();
 		thenServerNotStarted();
 	}
 	
 	@Test
-	public void start_thenServerStartedWithWebConfiguration() {
+	public void start_thenServerStartedWithWebConfiguration() throws OnRestInitializationException {
 		givenServletsInWebConfig();
 		whenServerStarts();
 		thenServerIsProperlyConfigured();
 	}
 	
 	@Test
-	public void stop_thenServerStopsIsCalled() {
+	public void stop_thenServerStopsIsCalled() throws OnRestInitializationException {
 		givenServerRunning();
 		whenServerStarts();
 		whenServerStops();
@@ -77,7 +77,7 @@ public class RestServerTest {
 		when(mockWebConfiguration.getServlets()).thenReturn(expectedServlets);
 	}
 	
-	private void whenServerStarts() {
+	private void whenServerStarts() throws OnRestInitializationException {
 		actualServerStarted = server.start();
 	}
 	
@@ -93,7 +93,7 @@ public class RestServerTest {
 		verify(mockServerFacade, times(1)).stop();
 	}
 	
-	private void thenServerIsProperlyConfigured() {
+	private void thenServerIsProperlyConfigured() throws OnRestInitializationException {
 		if (expectedServlets != null) {
 			for (Entry<String, Servlet> entry : expectedServlets.entrySet()) {
 				verify(mockServerFactory, times(1)).addContext(

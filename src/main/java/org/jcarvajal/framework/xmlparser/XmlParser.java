@@ -53,6 +53,24 @@ public class XmlParser {
 		return map;
 	}
 	
+	public <T> Map<String, T> mapElementsByTagName(Element root, String elementName,
+			String key, Parseable<T> parseable) {
+		
+		Map<String, T> map = new LinkedHashMap<String, T>(); 
+		NodeList nodes = root.getElementsByTagName(elementName);
+		for (int index = 0; index < nodes.getLength(); index++) {
+			Node node = nodes.item(index);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				Element elem = (Element) node;
+				String keyValue = readElemValue(elem, key);
+				T value = parseable.parse(elem);
+				map.put(keyValue, value);
+			}
+		}
+		
+		return map;
+	}
+	
 	public <T> Map<String, T> mapElementsByTagName(String elementName,
 			String key, Parseable<T> parseable) {
 		

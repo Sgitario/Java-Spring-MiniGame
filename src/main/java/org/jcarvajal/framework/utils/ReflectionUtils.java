@@ -29,16 +29,28 @@ public class ReflectionUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T createInstance(String className, 
 			Class<T> clazz, Map<String, String> params) {
-		T instance = null;
+		T result = null;
+		Object instance = createInstance(className, params);
+		if (instance != null 
+				&& clazz.isAssignableFrom(instance.getClass())) {
+			result = (T) instance;
+		} else {
+			LOG.severe(String.format("Class %s cannot be instantiated to %s", className, clazz.getName()));
+		}
+	
+		return result;
+	}
+	
+	public static Object createInstance(String className, 
+			Map<String, String> params) {
+		Object instance = null;
 		try {
 			Class<?> clazzInstance = createClass(className);
-			if (clazz.isAssignableFrom(clazzInstance)) {
-				instance = (T) clazzInstance.newInstance();
-				
-				if (params != null) {
-					for (Entry<String, String> param : params.entrySet()) {
-						invokeSetField(instance, param.getKey(), param.getValue());
-					}
+			instance = clazzInstance.newInstance();
+			
+			if (params != null) {
+				for (Entry<String, String> param : params.entrySet()) {
+					invokeSetField(instance, param.getKey(), param.getValue());
 				}
 			}
 		} catch (Exception e) {
