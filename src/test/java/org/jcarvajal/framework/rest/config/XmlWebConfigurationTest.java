@@ -5,9 +5,9 @@ import static org.mockito.Mockito.*;
 
 import java.util.Map;
 
-import org.jcarvajal.framework.rest.config.Servlet;
 import org.jcarvajal.framework.rest.config.XmlWebConfiguration;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
+import org.jcarvajal.framework.rest.servlet.Servlet;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class XmlWebConfigurationTest {
 	private Map<String, Servlet> actualMappings;
 	
 	@Before
-	public void setup() {
+	public void setup() throws OnRestInitializationException {
 		webConfiguration = spy(new XmlWebConfiguration());
 		when(webConfiguration.getFileStream(anyString())).thenReturn(this.getClass().getResourceAsStream(WEB_FILE));
 	}

@@ -16,16 +16,8 @@ public class OnDependencyInjectionInitializationException extends Exception {
 	 * Initializes a new instance of the OnDependencyInjectionInitializationException class.
 	 * @param cause
 	 */
-	public OnDependencyInjectionInitializationException(String cause) {
-		super(cause);
-	}
-	
-	/**
-	 * Initializes a new instance of the OnDependencyInjectionInitializationException class.
-	 * @param cause
-	 */
-	public OnDependencyInjectionInitializationException(Throwable cause) {
-		super(cause);
+	public OnDependencyInjectionInitializationException(String message, Object... args) {
+		super(String.format(message, args));
 	}
 
 }

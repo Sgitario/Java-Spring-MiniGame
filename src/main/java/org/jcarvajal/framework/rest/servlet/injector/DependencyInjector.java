@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.injector;
+package org.jcarvajal.framework.rest.servlet.injector;
 
 public interface DependencyInjector {
 	public void init();

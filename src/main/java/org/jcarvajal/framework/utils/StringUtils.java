@@ -1,6 +1,8 @@
 package org.jcarvajal.framework.utils;
 
 public class StringUtils {
+	public static final String EMPTY = "";
+
 	/**
 	 * Check whether a string is empty or not.
 	 * @param value

@@ -5,14 +5,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcarvajal.framework.rest.annotations.PathVariable;
-import org.jcarvajal.framework.rest.annotations.RequestBody;
-import org.jcarvajal.framework.rest.annotations.RequestMapping;
-import org.jcarvajal.framework.rest.annotations.RequestParam;
-import org.jcarvajal.framework.rest.annotations.ResponseMapping;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
-import org.jcarvajal.framework.rest.servlet.controllers.MarshallType;
 import org.jcarvajal.framework.rest.servlet.controllers.RequestMethod;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.PathVariable;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestBody;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestMapping;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestParam;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.ResponseMapping;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.ParamResolver;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.PathVariableParamResolver;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.RequestParamResolver;
@@ -91,9 +90,7 @@ public class AnnotationRequestHandler extends RequestHandler {
 			throws OnRequestMappingInitializationException {
 		if (method.isAnnotationPresent(ResponseMapping.class)) {
 			ResponseMapping responseMapping = method.getAnnotation(ResponseMapping.class);
-			if (responseMapping.type() == MarshallType.CSV) {
-				setMarshaller(new MappingCsvResponseMarshaller(responseMapping.map()));
-			}
+			setMarshaller(new MappingCsvResponseMarshaller(responseMapping.map()));
 		}
 	}
 

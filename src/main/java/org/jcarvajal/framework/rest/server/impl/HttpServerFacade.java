@@ -1,16 +1,23 @@
-package org.jcarvajal.framework.rest.server;
+package org.jcarvajal.framework.rest.server.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
+import org.jcarvajal.framework.rest.server.ServerFacade;
 import org.jcarvajal.framework.rest.servlet.DispatcherServlet;
+import org.jcarvajal.framework.utils.StringUtils;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * Implementation of ServerFacade that uses com.sun.net.httpserver.HttpServer internally. 
+ * @author jhilario
+ *
+ */
 @SuppressWarnings("restriction")
 public class HttpServerFacade implements ServerFacade {
 
@@ -20,6 +27,9 @@ public class HttpServerFacade implements ServerFacade {
 	private HttpServer server;
 	private boolean started = false;
 	
+	/**
+	 * Start the server.
+	 */
 	public boolean start(int port) {		
 		// Start.
 		try {
@@ -34,10 +44,16 @@ public class HttpServerFacade implements ServerFacade {
 		return this.started;
 	}
 
+	/**
+	 * "true" if the server is running.
+	 */
 	public boolean isStarted() {
 		return this.started;
 	}
 	
+	/**
+	 * Register a context.
+	 */
 	public void createContext(String context, final DispatcherServlet handler) {
 		this.server.createContext(context, new HttpHandler() {
 
@@ -62,7 +78,12 @@ public class HttpServerFacade implements ServerFacade {
 	}
 	
 	private void writeResponse(HttpExchange exchange, int code, String message) {
-		writeResponse(exchange, code, message.getBytes());
+		String response = StringUtils.EMPTY;
+		if (StringUtils.isNotEmpty(message)) {
+			response = message;
+		}
+		
+		writeResponse(exchange, code, response.getBytes());
 	}
 	
 	private void writeResponse(HttpExchange exchange, int code, byte[] response) {

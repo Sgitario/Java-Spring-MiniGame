@@ -7,13 +7,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
-import org.jcarvajal.framework.rest.injector.InjectorComponent;
+import org.jcarvajal.framework.rest.servlet.injector.InjectorComponent;
 import org.jcarvajal.framework.utils.IOUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
 import org.jcarvajal.framework.xmlparser.XmlParser;
 import org.w3c.dom.Element;
 
+/**
+ * Initializes the current dispatcher based on xml config file.
+ * The initialization involves:
+ * - Register an dependency injector.
+ * - Register controllers.
+ * 
+ * @author jhilario
+ *
+ */
 public class ConfigurationDispatcherServlet extends DispatcherServlet {
 
 	private static final String INJECTOR = "injector";
@@ -44,7 +53,7 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 			initInjector(parseInjector(parser));
 			initControllers(parseControllers(parser));
 		} catch (Exception ex) {
-			throw new OnRestInitializationException("Exception creating servlet dispatcher. Cause: " + ex.getMessage());
+			throw new OnRestInitializationException(ex, "Exception creating servlet dispatcher. ");
 		} finally {
 			IOUtils.close(is);
 		}
@@ -53,7 +62,7 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 	protected InputStream getFileStream(String file) throws OnRestInitializationException {
 		InputStream is = this.getClass().getResourceAsStream(file);
 		if (is == null) {
-			throw new OnRestInitializationException("Servlet config file cannot be found.");
+			throw new OnRestInitializationException("Servlet config file %s cannot be found.", file);
 		}
 		
 		return is;

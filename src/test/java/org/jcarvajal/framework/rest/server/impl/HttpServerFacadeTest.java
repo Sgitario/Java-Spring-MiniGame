@@ -1,11 +1,11 @@
-package org.jcarvajal.framework.rest.server;
+package org.jcarvajal.framework.rest.server.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 
-import org.jcarvajal.framework.rest.server.HttpServerFacade;
+import org.jcarvajal.framework.rest.server.impl.HttpServerFacade;
 import org.junit.Before;
 import org.junit.Test;
 

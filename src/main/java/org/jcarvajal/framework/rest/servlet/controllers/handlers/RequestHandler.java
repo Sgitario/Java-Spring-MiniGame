@@ -52,8 +52,7 @@ public abstract class RequestHandler {
 			Object result = this.method.invoke(controller, params);
 			response = this.marshaller.marshall(result);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new OnRequestException("Error handling request. ", e);
+			throw new OnRequestException(e, "Error handling request in %s ", url);
 		}
 		
 		return response;

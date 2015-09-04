@@ -1,18 +1,23 @@
 package org.jcarvajal.framework.di;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.jcarvajal.framework.di.builders.InitializationInstance;
-import org.jcarvajal.framework.di.builders.Instance;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
-import org.jcarvajal.framework.rest.injector.DependencyInjector;
-import org.jcarvajal.framework.utils.ReflectionUtils;
+import org.jcarvajal.framework.di.instances.InitializationInstance;
+import org.jcarvajal.framework.di.instances.Instance;
+import org.jcarvajal.framework.rest.servlet.injector.DependencyInjector;
 import org.jcarvajal.framework.utils.StringUtils;
 
+/**
+ * The DependencyInjectorBase provides an implementation of the DependencyInjector
+ * interface by the rest api.
+ * 
+ * @author jhilario
+ *
+ */
 public abstract class DependencyInjectorBase implements DependencyInjector {
 	
 	private static final Logger LOG = Logger.getLogger(
@@ -20,6 +25,10 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	
 	private final Map<String, Instance> repository = new LinkedHashMap<String, Instance>();
 	
+	/**
+	 * Inject the class from the repository.
+	 * In case of the class is not registered, the api will try to create it.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(String className) {
 		T object = null;
@@ -27,61 +36,59 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 		
 		// if not found, try to register it
 		if (facade == null) {
-			facade = bind(className, className, Collections.EMPTY_MAP);
+			try {
+				facade = initComponent(new Dependency(className));
+			} catch (InstantiationException e) {
+				LOG.warning(String.format("Instance %s cannot be resolved", className));
+			}
 		}
 		
 		// If finally found, then instantiate it.
 		if (facade != null) {
-			Object objectInRepository = facade.instance();
-			if (objectInRepository != null 
-					&& facade.getBindClazz().isAssignableFrom(objectInRepository.getClass())) {
-				object = (T) objectInRepository;
-			}
+			object = (T) facade.instance();
 		}
 		
 		return object;
 	}
 	
-	protected synchronized boolean isRegistered(String bind) {
-		return repository.containsKey(bind);
-	}
-	
-	protected synchronized void initComponents(List<DependencyComponent> components) {
+	/**
+	 * Register a list of components into the repository.
+	 * @param components
+	 * @throws InstantiationException 
+	 */
+	protected synchronized void initComponents(List<Dependency> components) 
+			throws InstantiationException {
 		if (components != null) {
-			for (DependencyComponent component : components) {
-				if (!isRegistered(component.getBindTo())) {
-					String implementedBy = component.getImplementedBy();
-					if (!StringUtils.isNotEmpty(implementedBy)) {
-						// If implementedBy not present, use name attribute.
-						implementedBy = component.getBindTo();
-					}
-					
-					bind(component.getBindTo(), implementedBy, component.getParams());
-					
-				} else {
-					LOG.warning(String.format("Componenty %s duplicated in config file", component.getBindTo()));
-				}
+			for (Dependency component : components) {
+				initComponent(component);
 			}
 		}
-		
 	}
 	
-	private synchronized Instance bind(String bindTo, String implementedBy,
-			Map<String, String> params) {
+	/**
+	 * Register a component into the repository.
+	 * @param components
+	 * @throws InstantiationException 
+	 */
+	protected synchronized Instance initComponent(Dependency component) 
+			throws InstantiationException {
 		Instance instance = null;
-		Class<?> bindClazz = ReflectionUtils.createClass(bindTo);
-		if (bindClazz != null) {
-			instance = new InitializationInstance(this);
-			try {
-				instance.bind(bindClazz, implementedBy, params);
-			} catch (InstantiationException e) {
-				LOG.severe("Instance cannot be created. Cause: " + e.getMessage());
+		if (component != null) {
+			String bindTo = component.getBindTo();
+			if (!repository.containsKey(bindTo)) {
+				Map<String, String> params = component.getParams();
+				String implementedBy = component.getImplementedBy();
+				if (!StringUtils.isNotEmpty(implementedBy)) {
+					// If implementedBy not present, use name attribute.
+					implementedBy = component.getBindTo();
+				}
+				
+				instance = new InitializationInstance(bindTo, implementedBy, params, this);
+				repository.put(bindTo, instance);
+				
+			} else {
+				LOG.warning(String.format("Componenty %s duplicated in config file", bindTo));
 			}
-			
-			repository.put(bindClazz.getName(), instance);
-			
-		} else {
-			LOG.warning(String.format("Class %s not found. Ignoring.", bindTo));
 		}
 		
 		return instance;

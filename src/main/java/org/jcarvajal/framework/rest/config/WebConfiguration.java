@@ -3,9 +3,10 @@ package org.jcarvajal.framework.rest.config;
 import java.util.Map;
 
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
+import org.jcarvajal.framework.rest.servlet.Servlet;
 
 /**
- * This class will read the servlet configuration. 
+ * This class will get the servlets. 
  * @author JoseCH
  *
  */

@@ -1,10 +1,13 @@
 package org.jcarvajal.framework.rest.server;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.jcarvajal.framework.rest.config.Servlet;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
+import org.jcarvajal.framework.rest.server.impl.HttpServerFacade;
 import org.jcarvajal.framework.rest.servlet.DispatcherServlet;
+import org.jcarvajal.framework.rest.servlet.Servlet;
 import org.jcarvajal.framework.utils.ReflectionUtils;
 
 /**
@@ -37,7 +40,7 @@ public class ServerFactory {
 	 * @param port
 	 * @return
 	 */
-	public ServerFactory bindServer(int port) {
+	public ServerFactory startServer(int port) {
 		serverFacade.start(port);
 		
 		return this;
@@ -48,6 +51,23 @@ public class ServerFactory {
 	 */
 	public ServerFacade get() {
 		return serverFacade;
+	}
+	
+	/**
+	 * Configure a list of servelts.
+	 * @param servlets
+	 * @return
+	 * @throws OnRestInitializationException
+	 */
+	public ServerFactory addContext(Map<String, Servlet> servlets) 
+			throws OnRestInitializationException {
+		if (servlets != null) {
+			for (Entry<String, Servlet> entry : servlets.entrySet()) {
+				addContext(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		return this;
 	}
 
 	/**
@@ -68,9 +88,8 @@ public class ServerFactory {
 	}
 
 	private DispatcherServlet createDispatcher(Servlet servlet) {
-		DispatcherServlet dispatcher = ReflectionUtils.createInstance(
-				servlet.getClassName(), DispatcherServlet.class,
-				servlet.getParams());
+		DispatcherServlet dispatcher = ReflectionUtils.createInstanceSafely(
+				servlet.getClassName(), servlet.getParams(), DispatcherServlet.class);
 		if (dispatcher == null) {
 			LOG.severe("Servlet is not a dispatcher! Ignoring...");
 		}

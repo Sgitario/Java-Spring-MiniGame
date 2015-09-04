@@ -16,8 +16,7 @@ import org.jcarvajal.framework.xmlparser.XmlParser;
 import org.w3c.dom.Element;
 
 /**
- * Read config file to bind all components and services.
- * Instantiate autowired annotations.
+ * Read config file to create the interface model to register the components.
  * @author JoseCH
  *
  */
@@ -59,22 +58,22 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 	protected InputStream getFileStream(String file) throws OnDependencyInjectionInitializationException {
 		InputStream is = this.getClass().getResourceAsStream(file);
 		if (is == null) {
-			throw new OnDependencyInjectionInitializationException("Dependency Injection Config file cannot be found.");
+			throw new OnDependencyInjectionInitializationException("Dependency Injection Config file %s cannot be found.", file);
 		}
 		
 		return is;
 	}
 	
-	private List<DependencyComponent> parseComponents(final XmlParser parser) {	
-		return parser.listElementsByTagName(COMPONENT_ELEM, new Parseable<DependencyComponent>() {
+	private List<Dependency> parseComponents(final XmlParser parser) {	
+		return parser.listElementsByTagName(COMPONENT_ELEM, new Parseable<Dependency>() {
 
-			public DependencyComponent parse(Element elem) {
+			public Dependency parse(Element elem) {
 				
 				String bindTo = readAttributeValue(elem, NAME);
 				String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
 				Map<String, String> params = parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
 				
-				return new DependencyComponent(bindTo, implementedBy, params);
+				return new Dependency(bindTo, implementedBy, params);
 			}
 			
 		});

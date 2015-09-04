@@ -3,7 +3,9 @@ package org.jcarvajal.framework.rest.server;
 import org.jcarvajal.framework.rest.servlet.DispatcherServlet;
 
 /**
- * Server interface to work with RestServer.
+ * Server facade to isolate the server internal implementation to the rest
+ * of the framework.
+ * 
  * @author JoseCH
  *
  */

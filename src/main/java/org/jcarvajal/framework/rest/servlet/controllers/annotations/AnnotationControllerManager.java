@@ -1,11 +1,16 @@
-package org.jcarvajal.framework.rest.servlet.controllers;
+package org.jcarvajal.framework.rest.servlet.controllers.annotations;
 
 import java.lang.reflect.Method;
 
-import org.jcarvajal.framework.rest.annotations.RequestMapping;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
+import org.jcarvajal.framework.rest.servlet.controllers.ControllerManager;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.AnnotationRequestHandler;
 
+/**
+ * Register all mappings of the controller based on their annotations.
+ * @author jhilario
+ *
+ */
 public class AnnotationControllerManager extends ControllerManager {
 	
 	/**
@@ -20,7 +25,7 @@ public class AnnotationControllerManager extends ControllerManager {
 			Method[] methods = controller.getClass().getMethods();
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(RequestMapping.class)) {
-					registerMapping(
+					initMapping(
 							new AnnotationRequestHandler(
 									controller, 
 									method,

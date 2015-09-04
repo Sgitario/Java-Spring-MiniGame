@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
+import org.jcarvajal.framework.di.instances.InitializationInstance;
 import org.jcarvajal.framework.utils.ReflectionUtils;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
 import org.jcarvajal.minigame.service.ScoreService;
@@ -30,7 +31,7 @@ public class InitializationInstanceTest {
 	public void setup() {
 		mockInjector = mock(DependencyInjectorBase.class);
 		
-		instance = new InitializationInstance(mockInjector);
+		
 	}
 	
 	@Test
@@ -38,7 +39,7 @@ public class InitializationInstanceTest {
 			throws InstantiationException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		givenRegisteredInInjector(ScoreRepository.class);
 		givenClassesToBind(ScoreService.class, ScoreServiceImpl.class);
-		whenBind();
+		whenCreateInstance();
 		thenInjectorReturnsImplInstance();
 		thenFieldIsNotNull("scoreRepository");
 	}
@@ -54,8 +55,8 @@ public class InitializationInstanceTest {
 		this.params = new HashMap<String, String>();
 	}
 	
-	private void whenBind() throws InstantiationException {
-		instance.bind(bind, implementedBy.getName(), params);
+	private void whenCreateInstance() throws InstantiationException {
+		instance = new InitializationInstance(bind.getName(), implementedBy.getName(), params, mockInjector);
 	}
 	
 	private void thenInjectorReturnsImplInstance() {

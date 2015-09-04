@@ -3,7 +3,7 @@ package org.jcarvajal.framework.rest.server;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import org.jcarvajal.framework.rest.server.HttpServerFacade;
+import org.jcarvajal.framework.rest.server.impl.HttpServerFacade;
 import org.jcarvajal.framework.rest.server.ServerFacade;
 import org.jcarvajal.framework.rest.server.ServerFactory;
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class ServerFactoryTest {
 	}
 	
 	private void whenBindServer() {
-		serverFactory.bindServer(PORT);
+		serverFactory.startServer(PORT);
 	}
 	
 	private void thenServerFacadeCalledStart() {

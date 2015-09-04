@@ -27,15 +27,15 @@ public class ReflectionUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T createInstance(String className, 
-			Class<T> clazz, Map<String, String> params) {
+	public static <T> T createInstanceSafely(String className, 
+			Map<String, String> params, Class<T> clazzTo) {
 		T result = null;
 		Object instance = createInstance(className, params);
 		if (instance != null 
-				&& clazz.isAssignableFrom(instance.getClass())) {
+				&& clazzTo.isAssignableFrom(instance.getClass())) {
 			result = (T) instance;
 		} else {
-			LOG.severe(String.format("Class %s cannot be instantiated to %s", className, clazz.getName()));
+			LOG.severe(String.format("Class %s cannot be instantiated to %s", className, clazzTo.getName()));
 		}
 	
 		return result;

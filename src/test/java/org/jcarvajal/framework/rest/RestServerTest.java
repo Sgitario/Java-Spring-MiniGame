@@ -1,22 +1,30 @@
 package org.jcarvajal.framework.rest;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.UUID;
 
-import org.jcarvajal.framework.rest.RestServer;
-import org.jcarvajal.framework.rest.config.Servlet;
 import org.jcarvajal.framework.rest.config.WebConfiguration;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.server.ServerFacade;
 import org.jcarvajal.framework.rest.server.ServerFactory;
+import org.jcarvajal.framework.rest.servlet.Servlet;
 import org.junit.Before;
 import org.junit.Test;
 
 public class RestServerTest {
+	
+	private static final int PORT = 1000;
 	
 	private RestServer server;
 	private ServerFacade mockServerFacade;
@@ -32,12 +40,11 @@ public class RestServerTest {
 		mockServerFacade = mock(ServerFacade.class);
 		mockServerFactory = mock(ServerFactory.class);
 		mockWebConfiguration = mock(WebConfiguration.class);
-		when(mockServerFactory.bindServer(anyInt())).thenReturn(mockServerFactory);
+		when(mockServerFactory.startServer(anyInt())).thenReturn(mockServerFactory);
+		when(mockServerFactory.addContext(any(Map.class))).thenReturn(mockServerFactory);
 		when(mockServerFactory.get()).thenReturn(mockServerFacade);
 		
-		server = new RestServer();
-		server.setServerFactory(mockServerFactory);
-		server.setConfig(mockWebConfiguration);
+		server = new RestServer(mockServerFactory, mockWebConfiguration, PORT);
 	}
 	
 	@Test
@@ -60,7 +67,7 @@ public class RestServerTest {
 	
 	private void givenServletsInWebConfig() {
 		expectedServlets = new LinkedHashMap<String, Servlet>();
-		expectedServlets.put("key1", new Servlet());
+		expectedServlets.put("key1", new Servlet(UUID.randomUUID().toString(), UUID.randomUUID().toString(), null));
 		when(mockWebConfiguration.getServlets()).thenReturn(expectedServlets);
 	}
 	
@@ -73,11 +80,7 @@ public class RestServerTest {
 	}
 	
 	private void thenServerIsProperlyConfigured() throws OnRestInitializationException {
-		if (expectedServlets != null) {
-			for (Entry<String, Servlet> entry : expectedServlets.entrySet()) {
-				verify(mockServerFactory, times(1)).addContext(
-						entry.getKey(), entry.getValue());
-			}
-		}	
+		verify(mockServerFactory, times(1)).addContext(
+				eq(expectedServlets));
 	}
 }

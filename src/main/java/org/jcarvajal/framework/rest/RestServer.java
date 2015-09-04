@@ -1,11 +1,8 @@
 package org.jcarvajal.framework.rest;
 
 import java.util.Date;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.jcarvajal.framework.rest.config.Servlet;
 import org.jcarvajal.framework.rest.config.WebConfiguration;
 import org.jcarvajal.framework.rest.config.XmlWebConfiguration;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
@@ -25,16 +22,15 @@ public class RestServer {
 			RestServer.class.getName());
 	
 	private final int port;
-	private ServerFacade server;
-	private ServerFactory serverFactory = new ServerFactory();
-	private WebConfiguration config = new XmlWebConfiguration();
+	private final ServerFactory serverFactory;
+	private final WebConfiguration config;
 	
 	/**
-	 * Initializes a new instace of the RestServer class using the default port.
+	 * Initializes a new instace of the RestServer class using the default impl.
 	 * @throws OnRestInitializationException 
 	 */
 	public RestServer() throws OnRestInitializationException {
-		this(DEFAULT_PORT);
+		this(new ServerFactory(), new XmlWebConfiguration(), DEFAULT_PORT);
 	}
 	
 	/**
@@ -42,17 +38,12 @@ public class RestServer {
 	 * @param port
 	 * @throws OnRestInitializationException 
 	 */
-	public RestServer(int port) throws OnRestInitializationException {
-		this.port = port;
-		this.config.init();
-	}
-	
-	public void setServerFactory(ServerFactory serverFactory) {
+	public RestServer(ServerFactory serverFactory, WebConfiguration config, int port) 
+			throws OnRestInitializationException {
 		this.serverFactory = serverFactory;
-	}
-	
-	public void setConfig(WebConfiguration config) {
+		this.port = port;
 		this.config = config;
+		this.config.init();
 	}
 	
 	/**
@@ -60,31 +51,19 @@ public class RestServer {
 	 * @throws OnRestInitializationException 
 	 */
 	public boolean start() throws OnRestInitializationException {
-		bindServer();
-		bindContexts();
 				
-		this.server = serverFactory.get();
+		ServerFacade server = serverFactory
+				.startServer(port)
+				.addContext(config.getServlets())
+				.get();
 		
-		if (this.server.isStarted()) {
+		if (server.isStarted()) {
 			LOG.info(String.format("Server started at %s", new Date()));
 			LOG.info(String.format("Server listening on %s", this.port));
 		} else {
 			LOG.warning("Server not started");
 		}
 		
-		return this.server.isStarted();
-	}
-	
-	private void bindServer() {
-		serverFactory.bindServer(this.port);
-	}
-	
-	private void bindContexts() throws OnRestInitializationException {
-		Map<String, Servlet> servlets = this.config.getServlets();
-		if (servlets != null) {
-			for (Entry<String, Servlet> entry : servlets.entrySet()) {
-				serverFactory.addContext(entry.getKey(), entry.getValue());
-			}
-		}
+		return server.isStarted();
 	}
 }
