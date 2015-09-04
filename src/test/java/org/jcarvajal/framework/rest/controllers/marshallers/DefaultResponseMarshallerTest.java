@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.servlet.controllers.handlers;
+package org.jcarvajal.framework.rest.controllers.marshallers;
 
 import static org.junit.Assert.*;
 

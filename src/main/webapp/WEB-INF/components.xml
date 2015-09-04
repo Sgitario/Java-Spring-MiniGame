@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <component implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemorySessionRepositoryImpl"
-        name="org.jcarvajal.minigame.infrastructure.SessionRepository"></component>
+        name="org.jcarvajal.minigame.infrastructure.SessionRepository">
+        <param>
+        	<param-name>limitScores</param-name>
+        	<param-value>15</param-value>
+        </param>
+    </component>
     <component implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl"
         name="org.jcarvajal.minigame.infrastructure.ScoreRepository"></component>
     <component implementedBy="org.jcarvajal.minigame.service.impl.SessionServiceImpl"

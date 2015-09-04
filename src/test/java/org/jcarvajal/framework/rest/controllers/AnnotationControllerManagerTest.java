@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.servlet.controllers;
+package org.jcarvajal.framework.rest.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

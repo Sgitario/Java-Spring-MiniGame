@@ -1,9 +1,11 @@
 package org.jcarvajal.minigame.infrastructure.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.logging.Logger;
 
 import org.jcarvajal.minigame.entities.Score;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
@@ -19,8 +21,16 @@ import org.jcarvajal.minigame.infrastructure.ScoreRepository;
  */
 public class MemoryScoreRepositoryImpl implements ScoreRepository {
 	
-	private Map<Integer, TreeMap<Integer, Score>> scores 
-		= new HashMap<Integer, TreeMap<Integer, Score>>();
+	private static final Logger LOG = Logger.getLogger(
+			MemoryScoreRepositoryImpl.class.getName());
+	
+	private Map<Integer, TreeSet<Score>> scores 
+		= new HashMap<Integer, TreeSet<Score>>();
+	private int limitScores = 15; // default 15 
+	
+	public void setLimitScores(String limitScores) {
+		this.limitScores = Integer.valueOf(limitScores);
+	}
 	
 	/**
 	 * The complexity of this method is O(1) + O(logN).
@@ -28,9 +38,13 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 	public Score getScore(int levelId, int userId) {
 		Score score = null;
 		if (scores.containsKey(levelId)) {
-			TreeMap<Integer, Score> scoresByLevel = scores.get(levelId);
+			TreeSet<Score> scoresByLevel = scores.get(levelId);
 			if (scoresByLevel != null) {
-				score = scoresByLevel.get(userId);
+				Score toFound = new Score();
+				toFound.setLevelId(levelId);
+				toFound.setUserId(userId);
+				
+				score = getScoreInternal(scoresByLevel, toFound);
 			}
 		}
 		
@@ -40,9 +54,9 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 	public Collection<Score> getScoreByLevelId(int levelId) {
 		Collection<Score> found = null;
 		if (scores.containsKey(levelId)) {
-			TreeMap<Integer, Score> scoresByLevel = scores.get(levelId);
+			TreeSet<Score> scoresByLevel = scores.get(levelId);
 			if (scoresByLevel != null) {
-				found = scoresByLevel.values();
+				found = new ArrayList<Score>(scoresByLevel);
 			}
 		}
 		
@@ -51,22 +65,72 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 	
 	public synchronized void saveScore(Score score) {
 		if (score != null) {
-			TreeMap<Integer, Score> scoresByLevel = scores.get(score.getLevelId());
-			if (scoresByLevel == null) {
-				scoresByLevel = new TreeMap<Integer, Score>();
-				scores.put(score.getLevelId(), scoresByLevel);
-			}
+			TreeSet<Score> scoresByLevel = initializeScoresByLevel(score.getLevelId()); 
 			
-			scoresByLevel.put(score.getUserId(), score);
+			// Update
+			scoresByLevel.add(score);
 			
 			// Limit number of items.
-			if (scoresByLevel.size() > 15) {
-				scoresByLevel.pollFirstEntry();
-			}
+			resizeScoresByLevelIfNeeded(scoresByLevel);
 		}
 	}
 	
+	/**
+	 * Remove the score from the collection and add it back to sort it.
+	 */
 	public void updateScore(Score score) {
-		// Do nothing since we store scores in memory.
+		if (score != null) {
+			TreeSet<Score> scoresByLevel = initializeScoresByLevel(score.getLevelId()); 
+			
+			// Update
+			scoresByLevel.remove(score);
+			scoresByLevel.add(score); // sort
+		}
+	}
+	
+	/**
+	 * Find the score Complexity=(O(logN))
+	 * @param scoresByLevel
+	 * @param search
+	 * @return
+	 */
+	private Score getScoreInternal(TreeSet<Score> scoresByLevel, Score search) {
+		Score score = null;
+		if (scoresByLevel != null) {			
+			Score ceiling = scoresByLevel.ceiling(search);
+			if (ceiling != null 
+					&& ceiling.getUserId() == search.getUserId()) {
+				score = ceiling;
+			}
+		}
+		
+		return score;
+	}
+	
+	/**
+	 * Initialize the list of scores by level if it was not created yet.
+	 * @param levelId
+	 * @return
+	 */
+	private TreeSet<Score> initializeScoresByLevel(int levelId) {
+		TreeSet<Score> scoresByLevel = scores.get(levelId);
+		if (scoresByLevel == null) {
+			scoresByLevel = new TreeSet<Score>();
+			scores.put(levelId, scoresByLevel);
+		}
+		
+		return scoresByLevel;
+	}
+	
+	/**
+	 * Delete the lowest scores.
+	 * @param scoresByLevel
+	 */
+	private void resizeScoresByLevelIfNeeded(TreeSet<Score> scoresByLevel) {
+		while (scoresByLevel.size() > limitScores) {
+			Score deleted = scoresByLevel.pollLast();
+			LOG.info(String.format("Deleted lowest score %s for level %s and user %s",
+					deleted.getScore(), deleted.getLevelId(), deleted.getUserId()));
+		}
 	}
 }
