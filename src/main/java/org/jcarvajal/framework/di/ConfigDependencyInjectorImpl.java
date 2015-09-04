@@ -3,12 +3,13 @@ package org.jcarvajal.framework.di;
 import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
 import org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet;
 import org.jcarvajal.framework.utils.IOUtils;
-import org.jcarvajal.framework.utils.StringUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
 import org.jcarvajal.framework.xmlparser.XmlParser;
@@ -39,7 +40,7 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 			is = getFileStream(configFile);
 			XmlParser parser = new XmlParser(is);
 			
-			parseComponents(parser);
+			initComponents(parseComponents(parser));
 		} catch (Exception ex) {
 			LOG.severe("Error when init Config Dependency Injector. Cause: " + ex.getMessage());
 		} finally {
@@ -64,27 +65,16 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 		return is;
 	}
 	
-	private synchronized void parseComponents(final XmlParser parser) {
-		parser.listElementsByTagName(COMPONENT_ELEM, new Parseable<Void>() {
+	private List<DependencyComponent> parseComponents(final XmlParser parser) {	
+		return parser.listElementsByTagName(COMPONENT_ELEM, new Parseable<DependencyComponent>() {
 
-			public Void parse(Element elem) {
+			public DependencyComponent parse(Element elem) {
 				
 				String bindTo = readAttributeValue(elem, NAME);
-				if (!isRegistered(bindTo)) {
-					String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
-					if (!StringUtils.isNotEmpty(implementedBy)) {
-						// If implementedBy not present, use name attribute.
-						implementedBy = bindTo;
-					}
-					
-					bind(bindTo, implementedBy, 
-							parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE)));
-					
-				} else {
-					LOG.warning(String.format("Componenty %s duplicated in config file", bindTo));
-				}
+				String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
+				Map<String, String> params = parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
 				
-				return null;
+				return new DependencyComponent(bindTo, implementedBy, params);
 			}
 			
 		});

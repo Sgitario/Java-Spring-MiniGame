@@ -15,7 +15,7 @@ public class InitializationInstance extends Instance {
 
 	@Override
 	public void onInit() throws InstantiationException {
-		initializeInstance();
+		createInstance();
 	}
 
 }

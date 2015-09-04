@@ -3,15 +3,12 @@ package org.jcarvajal.framework.rest.servlet;
 import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
-import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
-import org.jcarvajal.framework.rest.injector.DependencyInjector;
+import org.jcarvajal.framework.rest.injector.InjectorComponent;
 import org.jcarvajal.framework.utils.IOUtils;
-import org.jcarvajal.framework.utils.ReflectionUtils;
-import org.jcarvajal.framework.utils.StringUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
 import org.jcarvajal.framework.xmlparser.XmlParser;
@@ -25,8 +22,6 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 	private static final String PARAM = "param";
 	private static final String PARAM_KEY = "param-name";
 	private static final String PARAM_VALUE = "param-value";
-	private static final Logger LOG = Logger.getLogger(
-			ConfigurationDispatcherServlet.class.getName());
 	
 	private String contextConfigLocation;
 	
@@ -46,15 +41,15 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 			is = this.getFileStream(contextConfigLocation);
 			parser = new XmlParser(is);
 			
-			parseInjector(parser);
-			parseControllers(parser);
+			initInjector(parseInjector(parser));
+			initControllers(parseControllers(parser));
 		} catch (Exception ex) {
 			throw new OnRestInitializationException("Exception creating servlet dispatcher. Cause: " + ex.getMessage());
 		} finally {
 			IOUtils.close(is);
 		}
 	}
-	
+
 	protected InputStream getFileStream(String file) throws OnRestInitializationException {
 		InputStream is = this.getClass().getResourceAsStream(file);
 		if (is == null) {
@@ -68,52 +63,30 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 	 * Parse the injector from the config file.
 	 * @param parser
 	 */
-	private void parseInjector(final XmlParser parser) {
-		initializeInjector(parser.readDocValue(INJECTOR, new Parseable<DependencyInjector>() {
+	private InjectorComponent parseInjector(final XmlParser parser) {
+		return parser.readDocValue(INJECTOR, new Parseable<InjectorComponent>() {
 
-			public DependencyInjector parse(Element elem) {
-				DependencyInjector injector = null;
-				if (elem != null) {
-					String className = readAttributeValue(elem, CLASS_ATTRIBUTE);
-					if (StringUtils.isNotEmpty(className)) {
-						Map<String, String> params = parser
-								.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
-						
-						injector = ReflectionUtils.createInstance(className, DependencyInjector.class, params);
-					} else {
-						LOG.warning("Injector class name is empty. Ignoring.");
-					}
-				}
+			public InjectorComponent parse(Element elem) {
 				
-				return injector;
+				String className = readAttributeValue(elem, CLASS_ATTRIBUTE);
+				Map<String, String> params = parser
+						.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
+				
+				return new InjectorComponent(className, params);
 			}
 			
-		}));
+		});
 	}
 	
 	/**
 	 * Register a controller.
 	 * @param parser
 	 */
-	private void parseControllers(final XmlParser parser) {
-		parser.listElementsByTagName(CONTROLLER, new Parseable<Void>() {
+	private List<String> parseControllers(final XmlParser parser) {
+		return parser.listElementsByTagName(CONTROLLER, new Parseable<String>() {
 
-			public Void parse(Element elem) {
-				String className = readAttributeValue(elem, CLASS_ATTRIBUTE);
-				Object controller = getInjector().get(className);
-				if (controller != null) {
-					try {
-						registerController(controller);
-					} catch (OnRestInitializationException e) {
-						LOG.severe(String.format("Error registering controller %s. Cause: %s",
-								className, e.getMessage()));
-					} catch (OnRequestMappingInitializationException e) {
-						LOG.severe(String.format("Error registering request handler %s. Cause: %s",
-								className, e.getMessage()));
-					}
-				}
-				
-				return null;
+			public String parse(Element elem) {
+				return readAttributeValue(elem, CLASS_ATTRIBUTE);
 			}
 			
 		});

@@ -29,13 +29,13 @@ public abstract class RequestHandler {
 	
 	protected abstract String getMappingUrl();
 	protected abstract RequestMethod getRequestMethod();
-	protected abstract String initializeRegExpUrl(String url);
-	protected abstract List<ParamResolver> initializeParams(String url, Method method) 
+	protected abstract String initRegExpUrl(String url);
+	protected abstract List<ParamResolver> initParams(String url, Method method) 
 			throws OnRequestMappingInitializationException;
 
 	public void init() throws OnRequestMappingInitializationException {
-		this.params = initializeParams(getMappingUrl(), method);
-		this.regExpUrl = initializeRegExpUrl(getMappingUrl());
+		this.params = initParams(getMappingUrl(), method);
+		this.regExpUrl = initRegExpUrl(getMappingUrl());
 	}
 	
 	public boolean satisfy(String url, String method) {

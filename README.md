@@ -2,7 +2,7 @@
 
 Pending tasks
 
-- Refactor Parseable.
+- Refactor Parseable. (done)
 - Add unit tests.
 - Add comments.
 - Write documentation.

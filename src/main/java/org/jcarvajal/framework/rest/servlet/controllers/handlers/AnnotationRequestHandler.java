@@ -34,7 +34,7 @@ public class AnnotationRequestHandler extends RequestHandler {
 		this.requestMapping = requestMapping;
 		
 		// Response marshaller
-		initializeResponseMarshaller(method);
+		initResponseMarshaller(method);
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class AnnotationRequestHandler extends RequestHandler {
 		return requestMapping.method();
 	}
 	
-	protected List<ParamResolver> initializeParams(String url, Method method) 
+	protected List<ParamResolver> initParams(String url, Method method) 
 			throws OnRequestMappingInitializationException {
 		List<ParamResolver> params = new ArrayList<ParamResolver>();
 		Annotation[][] methodAnnotations = method.getParameterAnnotations();
@@ -75,7 +75,7 @@ public class AnnotationRequestHandler extends RequestHandler {
 		return params;
 	}
 	
-	protected String initializeRegExpUrl(String url) {
+	protected String initRegExpUrl(String url) {
 		String regExp = url;
 		
 		// Discard ?X=Y,Z=H... params
@@ -87,7 +87,7 @@ public class AnnotationRequestHandler extends RequestHandler {
 		return "^" + regExp + "(\\?.+)?";
 	}
 	
-	private void initializeResponseMarshaller(Method method) 
+	private void initResponseMarshaller(Method method) 
 			throws OnRequestMappingInitializationException {
 		if (method.isAnnotationPresent(ResponseMapping.class)) {
 			ResponseMapping responseMapping = method.getAnnotation(ResponseMapping.class);

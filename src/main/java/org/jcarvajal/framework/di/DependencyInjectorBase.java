@@ -2,6 +2,7 @@ package org.jcarvajal.framework.di;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -10,6 +11,7 @@ import org.jcarvajal.framework.di.builders.Instance;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
 import org.jcarvajal.framework.rest.injector.DependencyInjector;
 import org.jcarvajal.framework.utils.ReflectionUtils;
+import org.jcarvajal.framework.utils.StringUtils;
 
 public abstract class DependencyInjectorBase implements DependencyInjector {
 	
@@ -44,7 +46,27 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 		return repository.containsKey(bind);
 	}
 	
-	protected synchronized Instance bind(String bindTo, String implementedBy,
+	protected synchronized void initComponents(List<DependencyComponent> components) {
+		if (components != null) {
+			for (DependencyComponent component : components) {
+				if (!isRegistered(component.getBindTo())) {
+					String implementedBy = component.getImplementedBy();
+					if (!StringUtils.isNotEmpty(implementedBy)) {
+						// If implementedBy not present, use name attribute.
+						implementedBy = component.getBindTo();
+					}
+					
+					bind(component.getBindTo(), implementedBy, component.getParams());
+					
+				} else {
+					LOG.warning(String.format("Componenty %s duplicated in config file", component.getBindTo()));
+				}
+			}
+		}
+		
+	}
+	
+	private synchronized Instance bind(String bindTo, String implementedBy,
 			Map<String, String> params) {
 		Instance instance = null;
 		Class<?> bindClazz = ReflectionUtils.createClass(bindTo);

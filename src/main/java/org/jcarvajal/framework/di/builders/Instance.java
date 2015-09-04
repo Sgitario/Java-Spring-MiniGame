@@ -58,7 +58,7 @@ public abstract class Instance {
 		onInit();
 	}
 	
-	protected void initializeInstance() throws InstantiationException {
+	protected void createInstance() throws InstantiationException {
 		this.instance = ReflectionUtils.createInstance(implClazz, bindClazz, params);
 		if (this.instance == null) {
 			throw new InstantiationException(this);

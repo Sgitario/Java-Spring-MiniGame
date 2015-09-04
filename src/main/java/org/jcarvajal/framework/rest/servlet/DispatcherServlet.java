@@ -2,13 +2,18 @@ package org.jcarvajal.framework.rest.servlet;
 
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.List;
+import java.util.logging.Logger;
 
 import org.jcarvajal.framework.rest.exceptions.OnRequestException;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.injector.DependencyInjector;
+import org.jcarvajal.framework.rest.injector.InjectorComponent;
 import org.jcarvajal.framework.rest.servlet.controllers.AnnotationControllerManager;
 import org.jcarvajal.framework.rest.servlet.controllers.ControllerManager;
+import org.jcarvajal.framework.utils.ReflectionUtils;
+import org.jcarvajal.framework.utils.StringUtils;
 
 /**
  * Dispatch an incoming HTTP request.
@@ -17,6 +22,9 @@ import org.jcarvajal.framework.rest.servlet.controllers.ControllerManager;
  */
 public abstract class DispatcherServlet {
 
+	private static final Logger LOG = Logger.getLogger(
+			DispatcherServlet.class.getName());
+	
 	private DependencyInjector injector;
 	
 	/**
@@ -53,10 +61,15 @@ public abstract class DispatcherServlet {
 	 * @param injector
 	 * @throws Exception 
 	 */
-	protected void initializeInjector(DependencyInjector injector) {
-		this.injector = injector;
-		if (this.injector != null) {
-			this.injector.init();
+	protected void initInjector(InjectorComponent injectorInterface) {
+		if (injectorInterface != null 
+				&& StringUtils.isNotEmpty(injectorInterface.getClassName())) {
+			
+			this.injector = ReflectionUtils.createInstance(injectorInterface.getClassName(), 
+					DependencyInjector.class, injectorInterface.getParams());
+			if (this.injector != null) {
+				this.injector.init();
+			}
 		}
 	}
 	
@@ -66,13 +79,28 @@ public abstract class DispatcherServlet {
 	 * @throws OnRestInitializationException 
 	 * @throws OnRequestMappingInitializationException 
 	 */
-	protected void registerController(Object controller) 
-			throws OnRestInitializationException, OnRequestMappingInitializationException {
-		if (controllerManager == null) {
-			throw new OnRestInitializationException("Manager of controllers is null");
+	protected void initControllers(List<String> controllers) {
+		if (controllers != null) {
+			for (String controllerClassName : controllers) {
+				Object controller = getInjector().get(controllerClassName);
+				if (controller != null) {
+					try {
+						if (controllerManager == null) {
+							throw new OnRestInitializationException("Manager of controllers is null");
+						}
+						
+						controllerManager.register(controller);
+					} catch (OnRestInitializationException e) {
+						LOG.severe(String.format("Error registering controller %s. Cause: %s",
+								controllerClassName, e.getMessage()));
+					} catch (OnRequestMappingInitializationException e) {
+						LOG.severe(String.format("Error registering request handler %s. Cause: %s",
+								controllerClassName, e.getMessage()));
+					}
+				}
+			}
 		}
 		
-		controllerManager.register(controller);
 	}
 
 }
