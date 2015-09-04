@@ -1,7 +1,6 @@
 package org.jcarvajal.framework.di;
 
-import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
-
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -11,7 +10,6 @@ import org.jcarvajal.framework.di.builders.Instance;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
 import org.jcarvajal.framework.rest.injector.DependencyInjector;
 import org.jcarvajal.framework.utils.ReflectionUtils;
-import org.jcarvajal.framework.xmlparser.StringParseable;
 
 public abstract class DependencyInjectorBase implements DependencyInjector {
 	
@@ -24,15 +22,19 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	public <T> T get(String className) {
 		T object = null;
 		Instance facade = repository.get(className);
+		
+		// if not found, try to register it
+		if (facade == null) {
+			facade = bind(className, className, Collections.EMPTY_MAP);
+		}
+		
+		// If finally found, then instantiate it.
 		if (facade != null) {
 			Object objectInRepository = facade.instance();
 			if (objectInRepository != null 
 					&& facade.getBindClazz().isAssignableFrom(objectInRepository.getClass())) {
 				object = (T) objectInRepository;
 			}
-		} else {
-			// if not found, try to register it
-			
 		}
 		
 		return object;
@@ -42,11 +44,12 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 		return repository.containsKey(bind);
 	}
 	
-	protected void bind(String bindTo, String implementedBy,
+	protected synchronized Instance bind(String bindTo, String implementedBy,
 			Map<String, String> params) {
+		Instance instance = null;
 		Class<?> bindClazz = ReflectionUtils.createClass(bindTo);
 		if (bindClazz != null) {
-			InitializationInstance instance = new InitializationInstance(this);
+			instance = new InitializationInstance(this);
 			try {
 				instance.bind(bindClazz, implementedBy, params);
 			} catch (InstantiationException e) {
@@ -58,5 +61,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 		} else {
 			LOG.warning(String.format("Class %s not found. Ignoring.", bindTo));
 		}
+		
+		return instance;
 	}
 }

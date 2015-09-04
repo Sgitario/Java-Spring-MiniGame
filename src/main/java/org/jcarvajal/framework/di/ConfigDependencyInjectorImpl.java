@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
 import org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet;
 import org.jcarvajal.framework.utils.IOUtils;
+import org.jcarvajal.framework.utils.StringUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
 import org.jcarvajal.framework.xmlparser.XmlParser;
@@ -71,6 +72,10 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 				String bindTo = readAttributeValue(elem, NAME);
 				if (!isRegistered(bindTo)) {
 					String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
+					if (!StringUtils.isNotEmpty(implementedBy)) {
+						// If implementedBy not present, use name attribute.
+						implementedBy = bindTo;
+					}
 					
 					bind(bindTo, implementedBy, 
 							parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE)));

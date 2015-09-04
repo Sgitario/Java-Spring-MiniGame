@@ -36,6 +36,6 @@ public class ConfigurationDispatcherServletTest {
 		DependencyInjector injector = dispatcher.getInjector();
 		assertNotNull(injector);
 		assertTrue(injector instanceof ConfigDependencyInjectorImpl);
-		assertEquals("WEB-INF/components.xml", ((ConfigDependencyInjectorImpl) injector).getConfigFile());
+		assertEquals("/components.xml", ((ConfigDependencyInjectorImpl) injector).getConfigFile());
 	}
 }

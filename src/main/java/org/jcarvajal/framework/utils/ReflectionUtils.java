@@ -78,7 +78,7 @@ public class ReflectionUtils {
 			Method method = instance.getClass().getMethod(String.format("%s%s", 
 					SET, StringUtils.capitalize(fieldName)), valueInterface);
 			if (method != null) {
-				method.invoke(instance, value);
+				invokeMethod(instance, method, value);
 			}
 		}
 	}
@@ -91,8 +91,19 @@ public class ReflectionUtils {
 			Method method = instance.getClass().getMethod(String.format("%s%s", 
 					GET, StringUtils.capitalize(fieldName)));
 			if (method != null) {
-				value = method.invoke(instance);
+				value = invokeMethod(instance, method);
 			}
+		}
+		
+		return value;
+	}
+	
+	public static Object invokeMethod(Object instance, Method method, Object... params) 
+			throws NoSuchMethodException, SecurityException, IllegalAccessException, 
+			IllegalArgumentException, InvocationTargetException {
+		Object value = null;
+		if (method != null) {
+			value = method.invoke(instance, params);
 		}
 		
 		return value;

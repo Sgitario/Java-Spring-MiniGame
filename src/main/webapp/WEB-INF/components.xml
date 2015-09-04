@@ -5,7 +5,12 @@
     <component implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl"
         name="org.jcarvajal.minigame.infrastructure.ScoreRepository"></component>
     <component implementedBy="org.jcarvajal.minigame.service.impl.SessionServiceImpl"
-        name="org.jcarvajal.minigame.service.SessionService"></component>
+        name="org.jcarvajal.minigame.service.SessionService">
+        <param>
+        	<param-name>sessionExpiredMinutes</param-name>
+        	<param-value>10</param-value>
+        </param>
+    </component>
     <component implementedBy="org.jcarvajal.minigame.service.impl.ScoreServiceImpl"
         name="org.jcarvajal.minigame.service.ScoreService"></component>
 </config>

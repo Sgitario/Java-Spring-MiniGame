@@ -1,11 +1,13 @@
 package org.jcarvajal.framework.di.builders;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.jcarvajal.framework.utils.ReflectionUtils;
 import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.annotations.Autowired;
+import org.jcarvajal.framework.di.annotations.Init;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
 
 public abstract class Instance {
@@ -62,10 +64,11 @@ public abstract class Instance {
 			throw new InstantiationException(this);
 		}
 		
-		resolveAutowired();
+		resolveAutowiredFields();
+		runInitMethods();
 	}
 	
-	private void resolveAutowired() throws InstantiationException {
+	private void resolveAutowiredFields() throws InstantiationException {
 		if (this.instance != null) {
 			Field[] fields = this.instance.getClass().getDeclaredFields();
 			for (Field field : fields) {
@@ -82,9 +85,26 @@ public abstract class Instance {
 					try {
 						ReflectionUtils.invokeSetField(this.instance, field.getName(), value, field.getType());
 					} catch (Exception e) {
-						e.printStackTrace();
 						throw new InstantiationException(
 								String.format("Field %s has not set method or is not visible. ", field.getName()), 
+								this);
+					}
+				}
+			}
+		}
+	}
+	
+	private void runInitMethods() throws InstantiationException {
+		if (this.instance != null) {
+			Method[] methods = this.instance.getClass().getDeclaredMethods();
+			for (Method method : methods) {
+				if (method.isAnnotationPresent(Init.class)) {					
+					// Set
+					try {
+						ReflectionUtils.invokeMethod(this.instance, method);
+					} catch (Exception e) {
+						throw new InstantiationException(
+								String.format("Method %s cannot be executed at init stage. The method should be public and no-args. ", method.getName()), 
 								this);
 					}
 				}

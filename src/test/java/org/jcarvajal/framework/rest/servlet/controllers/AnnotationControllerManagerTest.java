@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jcarvajal.framework.rest.annotations.PathVariable;
 import org.jcarvajal.framework.rest.annotations.RequestBody;
