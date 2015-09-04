@@ -48,7 +48,7 @@ private final String CONFIG_FILE = "/components.xml";
 
 	private void thenInstanceImplFound(Class<?> bind,
 			Class<?> impl) {
-		Object instance = injector.get(bind);
+		Object instance = injector.get(bind.getName());
 		assertNotNull(instance);
 		assertTrue(impl.isAssignableFrom(instance.getClass()));
 	}

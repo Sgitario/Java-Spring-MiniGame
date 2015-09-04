@@ -6,60 +6,76 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jcarvajal.framework.rest.annotations.PathVariable;
+import org.jcarvajal.framework.rest.annotations.RequestBody;
 import org.jcarvajal.framework.rest.annotations.RequestMapping;
 import org.jcarvajal.framework.rest.annotations.RequestParam;
-import org.jcarvajal.framework.rest.exceptions.OnRequestException;
+import org.jcarvajal.framework.rest.annotations.ResponseMapping;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
+import org.jcarvajal.framework.rest.servlet.controllers.MarshallType;
 import org.jcarvajal.framework.rest.servlet.controllers.RequestMethod;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.ParamResolver;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.PathVariableParamResolver;
 import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.RequestParamResolver;
+import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.RequestBodyParamResolver;
 import org.jcarvajal.framework.utils.URLUtils;
 
-public class AnnotationRequestHandler implements RequestHandler {
+public class AnnotationRequestHandler extends RequestHandler {
+
+	private final RequestMapping requestMapping;
 	
-	private final Object controller;
-	private final Method method;
-	private final RequestMethod requestMethod;
-	private final String originalUrl;
-	private final String regExpUrl;
-	private final ResponseMarshaller marshaller = new StringResponseMarshaller();
-	private List<ParamResolver> params = new ArrayList<ParamResolver>();
-	
-	public AnnotationRequestHandler(Object controller, Method method) throws OnRequestMappingInitializationException {
-		if (controller == null 
-				|| !method.isAnnotationPresent(RequestMapping.class)) {
-			throw new OnRequestMappingInitializationException("Method is not a request mapping!");
+	public AnnotationRequestHandler(Object controller, Method method, 
+			RequestMapping requestMapping) 
+			throws OnRequestMappingInitializationException {
+		super(controller, method);
+		if (requestMapping == null) {
+			throw new OnRequestMappingInitializationException("Request mapping cannot be null!");
 		}
 		
-		RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);		
-		this.controller = controller;
-		this.method = method;
-		this.originalUrl = requestMapping.url();
-		this.requestMethod = requestMapping.method();
-		this.regExpUrl = registerUrl(this.originalUrl, method);
-		this.params = registerParams(method);
-	}
-
-	public boolean satisfy(String url, String method) {
-		return url != null && url.matches(regExpUrl) && this.requestMethod.equals(method);
-	}
-
-	public Object invoke(String url) throws OnRequestException {
-		Object response = null;
-		try {
-			Object[] params = resolveParams(url);
-			
-			response = this.method.invoke(controller, params);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new OnRequestException("Error handling request. ", e);
-		}
+		this.requestMapping = requestMapping;
 		
-		return response;
+		// Response marshaller
+		initializeResponseMarshaller(method);
 	}
 	
-	private String registerUrl(String url, Method method) {
+	@Override
+	protected String getMappingUrl() {
+		return requestMapping.url();
+	}
+	
+	@Override
+	protected RequestMethod getRequestMethod() {
+		return requestMapping.method();
+	}
+	
+	protected List<ParamResolver> initializeParams(String url, Method method) 
+			throws OnRequestMappingInitializationException {
+		List<ParamResolver> params = new ArrayList<ParamResolver>();
+		Annotation[][] methodAnnotations = method.getParameterAnnotations();
+		for (int index = 0; index < methodAnnotations.length; index++) {
+			Annotation[] paramAnnotations = methodAnnotations[index];
+			if (paramAnnotations.length > 0) {
+				// Only support one annotation per parameter.
+				Annotation annotation = paramAnnotations[0];
+				
+				// Resolve
+				if (annotation.annotationType().equals(RequestParam.class)) {
+					RequestParam annotationParam = (RequestParam) annotation;
+					
+					params.add(new RequestParamResolver(annotationParam.attr(), index));
+				} else if (annotation.annotationType().equals(PathVariable.class)) {
+					PathVariable annotationParam = (PathVariable) annotation;
+					
+					params.add(new PathVariableParamResolver(url, annotationParam.name(), index));
+				} else if (annotation.annotationType().equals(RequestBody.class)) {
+					params.add(new RequestBodyParamResolver(index));
+				}
+			}
+		}
+		
+		return params;
+	}
+	
+	protected String initializeRegExpUrl(String url) {
 		String regExp = url;
 		
 		// Discard ?X=Y,Z=H... params
@@ -71,35 +87,14 @@ public class AnnotationRequestHandler implements RequestHandler {
 		return "^" + regExp + "(\\?.+)?";
 	}
 	
-	private List<ParamResolver> registerParams(Method method) 
+	private void initializeResponseMarshaller(Method method) 
 			throws OnRequestMappingInitializationException {
-		List<ParamResolver> params = new ArrayList<ParamResolver>();
-		Annotation[][] annotations = method.getParameterAnnotations();
-		for (int index = 0; index < annotations.length; index++) {
-			Annotation[] annotation = annotations[index];
-			if (annotation.length > 0) {
-				if (annotation[0].annotationType().equals(RequestParam.class)) {
-					RequestParam annotationParam = (RequestParam) annotation[0];
-					
-					params.add(new RequestParamResolver(annotationParam.attr(), index));
-				} else if (annotation[0].annotationType().equals(PathVariable.class)) {
-					PathVariable annotationParam = (PathVariable) annotation[0];
-					
-					params.add(new PathVariableParamResolver(originalUrl, annotationParam.name(), index));
-				}
+		if (method.isAnnotationPresent(ResponseMapping.class)) {
+			ResponseMapping responseMapping = method.getAnnotation(ResponseMapping.class);
+			if (responseMapping.type() == MarshallType.CSV) {
+				setMarshaller(new MappingCsvResponseMarshaller(responseMapping.map()));
 			}
 		}
-		
-		return params;
-	}
-	
-	private Object[] resolveParams(String url) {
-		Object[] paramValues = new Object[params.size()];
-		for (ParamResolver paramResolver : params) {
-			paramValues[paramResolver.getPosition()] = paramResolver.resolve(url);
-		}
-		
-		return paramValues;
 	}
 
 }

@@ -45,7 +45,7 @@ public class InitializationInstanceTest {
 	
 	private <T> void givenRegisteredInInjector(Class<T> bind) {
 		T instance = mock(bind);
-		when(mockInjector.get(eq(bind))).thenReturn(instance);
+		when(mockInjector.get(eq(bind.getName()))).thenReturn(instance);
 	}
 	
 	private void givenClassesToBind(Class<?> bind, Class<?> implementedBy) {

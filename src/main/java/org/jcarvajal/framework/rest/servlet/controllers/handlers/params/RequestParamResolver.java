@@ -1,5 +1,7 @@
 package org.jcarvajal.framework.rest.servlet.controllers.handlers.params;
 
+import java.io.OutputStream;
+
 public class RequestParamResolver extends ParamResolver {
 
 	private final String START_WITH_FORMAT = "%s=";
@@ -14,7 +16,7 @@ public class RequestParamResolver extends ParamResolver {
 	}
 
 	@Override
-	public Object resolve(String url) {
+	public Object resolve(String url, OutputStream responseBody) {
 		String value = null;
 		if (url != null) {
 			String startWith = String.format(START_WITH_FORMAT, this.attrName);

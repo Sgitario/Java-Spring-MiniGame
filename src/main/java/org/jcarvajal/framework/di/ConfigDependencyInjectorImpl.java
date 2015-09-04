@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
 import org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet;
 import org.jcarvajal.framework.utils.IOUtils;
-import org.jcarvajal.framework.utils.ReflectionUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
 import org.jcarvajal.framework.xmlparser.XmlParser;
@@ -24,8 +23,7 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 	private static final Logger LOG = Logger.getLogger(
 			ConfigurationDispatcherServlet.class.getName());
 
-	private static final String REPOSITORY_ELEM = "repository";
-	private static final String SERVICE_ELEM = "service";
+	private static final String COMPONENT_ELEM = "component";
 	private static final String NAME = "name";
 	private static final String IMPLEMENTED_BY = "implementedBy";
 	private static final String PARAM = "param";
@@ -40,8 +38,7 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 			is = getFileStream(configFile);
 			XmlParser parser = new XmlParser(is);
 			
-			parseComponents(REPOSITORY_ELEM, parser);
-			parseComponents(SERVICE_ELEM, parser);
+			parseComponents(parser);
 		} catch (Exception ex) {
 			LOG.severe("Error when init Config Dependency Injector. Cause: " + ex.getMessage());
 		} finally {
@@ -66,26 +63,20 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 		return is;
 	}
 	
-	private synchronized void parseComponents(final String elem, final XmlParser parser) {
-		parser.listElementsByTagName(elem, new Parseable<Void>() {
+	private synchronized void parseComponents(final XmlParser parser) {
+		parser.listElementsByTagName(COMPONENT_ELEM, new Parseable<Void>() {
 
 			public Void parse(Element elem) {
 				
-				String bind = readAttributeValue(elem, NAME);
-				if (!isRegistered(bind)) {
-					Class<?> bindClazz = ReflectionUtils.createClass(bind);
-					if (bindClazz != null) {
-						String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
-						
-						bind(bindClazz, implementedBy, 
-								parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE)));
-						
-					} else {
-						LOG.warning(String.format("Class %s not found. Ignoring.", bind));
-					}
+				String bindTo = readAttributeValue(elem, NAME);
+				if (!isRegistered(bindTo)) {
+					String implementedBy = readAttributeValue(elem, IMPLEMENTED_BY);
+					
+					bind(bindTo, implementedBy, 
+							parser.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE)));
 					
 				} else {
-					LOG.warning(String.format("Componenty %s duplicated in config file", bind));
+					LOG.warning(String.format("Componenty %s duplicated in config file", bindTo));
 				}
 				
 				return null;

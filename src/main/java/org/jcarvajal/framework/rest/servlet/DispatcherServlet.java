@@ -39,8 +39,9 @@ public abstract class DispatcherServlet {
 	 * @throws OnRequestException 
 	 */
 	public byte[] handle(URI requestURI, String requestMethod,
-			OutputStream responseBody) throws OnRequestException {		
-		return controllerManager.handle(requestURI.toString(), requestMethod);
+			OutputStream responseBody) throws OnRequestException {
+		return controllerManager.handle(requestURI.toString(), 
+				requestMethod, responseBody);
 	}
 	
 	protected DependencyInjector getInjector() {

@@ -32,6 +32,10 @@ public abstract class Instance {
 		return implClazz;
 	}
 	
+	public Class<?> getBindClazz() {
+		return bindClazz;
+	}
+	
 	public String getBindClazzName() {
 		return bindClazz.getName();
 	}
@@ -40,7 +44,7 @@ public abstract class Instance {
 		
 	}
 	
-	public void onInvoked()throws InstantiationException {
+	public void onInvoked() throws InstantiationException {
 		
 	}
 	
@@ -67,7 +71,7 @@ public abstract class Instance {
 			for (Field field : fields) {
 				if (field.isAnnotationPresent(Autowired.class)) {
 					// Find
-					Object value = this.injector.get(field.getType());
+					Object value = this.injector.get(field.getType().getName());
 					if (value == null) {
 						throw new InstantiationException(
 								String.format("Field %s cannot be resolved. ", field.getName()), 

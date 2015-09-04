@@ -100,9 +100,7 @@ public class ConfigurationDispatcherServlet extends DispatcherServlet {
 
 			public Void parse(Element elem) {
 				String className = readAttributeValue(elem, CLASS_ATTRIBUTE);
-				Map<String, String> params = parser
-						.mapElementsByTagName(elem, PARAM, PARAM_KEY, new StringParseable(PARAM_VALUE));
-				Object controller = ReflectionUtils.createInstance(className, params);
+				Object controller = getInjector().get(className);
 				if (controller != null) {
 					try {
 						registerController(controller);

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <repository implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemorySessionRepositoryImpl"
-        name="org.jcarvajal.minigame.infrastructure.SessionRepository"></repository>
-    <repository implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl"
-        name="org.jcarvajal.minigame.infrastructure.ScoreRepository"></repository>
-    <service implementedBy="org.jcarvajal.minigame.service.impl.SessionServiceImpl"
-        name="org.jcarvajal.minigame.service.SessionService"></service>
-    <service implementedBy="org.jcarvajal.minigame.service.impl.ScoreServiceImpl"
-        name="org.jcarvajal.minigame.service.ScoreService"></service>
+    <component implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemorySessionRepositoryImpl"
+        name="org.jcarvajal.minigame.infrastructure.SessionRepository"></component>
+    <component implementedBy="org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl"
+        name="org.jcarvajal.minigame.infrastructure.ScoreRepository"></component>
+    <component implementedBy="org.jcarvajal.minigame.service.impl.SessionServiceImpl"
+        name="org.jcarvajal.minigame.service.SessionService"></component>
+    <component implementedBy="org.jcarvajal.minigame.service.impl.ScoreServiceImpl"
+        name="org.jcarvajal.minigame.service.ScoreService"></component>
 </config>

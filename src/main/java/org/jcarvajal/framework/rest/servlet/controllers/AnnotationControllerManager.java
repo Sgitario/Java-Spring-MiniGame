@@ -20,7 +20,11 @@ public class AnnotationControllerManager extends ControllerManager {
 			Method[] methods = controller.getClass().getMethods();
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(RequestMapping.class)) {
-					registerMapping(new AnnotationRequestHandler(controller, method));
+					registerMapping(
+							new AnnotationRequestHandler(
+									controller, 
+									method,
+									method.getAnnotation(RequestMapping.class)));
 				}
 			}
 		}

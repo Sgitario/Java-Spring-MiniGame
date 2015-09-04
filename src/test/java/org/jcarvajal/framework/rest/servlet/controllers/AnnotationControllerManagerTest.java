@@ -1,10 +1,16 @@
 package org.jcarvajal.framework.rest.servlet.controllers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.jcarvajal.framework.rest.annotations.PathVariable;
+import org.jcarvajal.framework.rest.annotations.RequestBody;
 import org.jcarvajal.framework.rest.annotations.RequestMapping;
 import org.jcarvajal.framework.rest.annotations.RequestParam;
+import org.jcarvajal.framework.rest.annotations.ResponseMapping;
 import org.jcarvajal.framework.rest.exceptions.OnRequestException;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.junit.Before;
@@ -17,7 +23,7 @@ public class AnnotationControllerManagerTest {
 	private Object controller;
 	
 	private String expectedResponse;
-	private Object actualResponse;
+	private byte[] actualResponse;
 	
 	@Before
 	public void setup() {
@@ -48,6 +54,22 @@ public class AnnotationControllerManagerTest {
 		thenResponsesMatch();
 	}
 	
+	@Test
+	public void register_whenRequestWithResponseMapping_thenUrlIsMatched() 
+			throws OnRequestMappingInitializationException, OnRequestException {
+		givenRegisterControllerRequest();
+		whenUrlIsForController();
+		thenResponsesMatch();
+	}
+	
+	@Test
+	public void register_whenRequestPostWithBody_thenUrlIsMatched() 
+			throws OnRequestMappingInitializationException, OnRequestException, IOException {
+		givenRegisterPostRequest();
+		whenUrlIsForPost();
+		thenResponsesMatch();
+	}
+	
 	private void givenRegisterPingRequest() throws OnRequestMappingInitializationException {
 		controller = new EchoController();
 		expectedResponse = "pong";
@@ -66,27 +88,54 @@ public class AnnotationControllerManagerTest {
 		manager.register(controller);
 	}
 	
+	private void givenRegisterControllerRequest() throws OnRequestMappingInitializationException {
+		controller = new EchoController();
+		expectedResponse = "10";
+		manager.register(controller);
+	}
+	
+	private void givenRegisterPostRequest() throws OnRequestMappingInitializationException {
+		controller = new EchoController();
+		expectedResponse = "THIS IS THE BODY and 6";
+		manager.register(controller);
+	}
+	
 	private void whenUrlIsForPing() throws OnRequestException {
-		actualResponse = manager.handle("/ping", RequestMethod.GET.toString());
+		actualResponse = manager.handle("/ping", RequestMethod.GET.toString(), null);
 	}
 	
 	private void whenUrlIsForEcho() throws OnRequestException {
-		actualResponse = manager.handle("/echo?value=" + expectedResponse, RequestMethod.GET.toString());
+		actualResponse = manager.handle("/echo?value=" + expectedResponse, RequestMethod.GET.toString(), null);
 	}
 	
 	private void whenUrlIsForSum() throws OnRequestException {
-		actualResponse = manager.handle("/sum/2/3?label=Sum", RequestMethod.GET.toString());
+		actualResponse = manager.handle("/sum/2/3?label=Sum", RequestMethod.GET.toString(), null);
+	}
+	
+	private void whenUrlIsForController() throws OnRequestException {
+		actualResponse = manager.handle("/controller/5", RequestMethod.GET.toString(), null);
+	}
+	
+	private void whenUrlIsForPost() throws OnRequestException, IOException {
+		String text = "This is the body";
+		byte[] stringByte = text.getBytes();
+	    ByteArrayOutputStream bos = new ByteArrayOutputStream(text.length());
+	    bos.write(stringByte);
+		
+		actualResponse = manager.handle("/post/5", RequestMethod.POST.toString(), bos);
 	}
 	
 	private void thenResponsesMatch() {
-		assertEquals(expectedResponse, actualResponse);
+		assertNotNull(actualResponse);
+		String actualResponseStr = new String(actualResponse);
+		assertEquals(expectedResponse, actualResponseStr);
 	}
 	
 	public class EchoController {
-		private int value;
+		private int property;
 		
-		public int getValue() {
-			return value;
+		public int getProperty() {
+			return property;
 		}
 		
 		@RequestMapping(url="/ping", method = RequestMethod.GET)
@@ -105,12 +154,18 @@ public class AnnotationControllerManagerTest {
 			return String.format("%s is %s", value, value1 + value2);
 		}
 		
-		@RequestMapping(url="/echoController/{value1}", method = RequestMethod.GET)
-		public EchoController sum(@PathVariable(name="value1") int value1) {
+		@RequestMapping(url="/controller/{value1}", method = RequestMethod.GET)
+		@ResponseMapping(map="{property}")
+		public EchoController controller(@PathVariable(name="value1") int value1) {
 			
-			value = value1 * 2;
+			property = value1 * 2;
 			
 			return this;
+		}
+		
+		@RequestMapping(url="/post/{value1}", method = RequestMethod.POST)
+		public String post(@PathVariable(name="value1") int value1, @RequestBody String body) {
+			return String.format("%s and %s", body.toUpperCase(), value1 + 1);
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package org.jcarvajal.framework.rest.servlet.controllers.handlers.params;
 
+import java.io.OutputStream;
+
 public abstract class ParamResolver {
 	private final int position;
 	public ParamResolver(int position) {
@@ -10,5 +12,5 @@ public abstract class ParamResolver {
 		return position;
 	}
 	
-	public abstract Object resolve(String url);
+	public abstract Object resolve(String url, OutputStream responseBody);
 }
