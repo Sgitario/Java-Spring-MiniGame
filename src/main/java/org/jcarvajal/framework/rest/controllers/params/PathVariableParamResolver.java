@@ -1,6 +1,6 @@
 package org.jcarvajal.framework.rest.controllers.params;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.utils.StringUtils;
@@ -31,7 +31,7 @@ public class PathVariableParamResolver extends ParamResolver {
 	}
 
 	@Override
-	public Object resolve(String url, OutputStream responseBody) {
+	public Object resolve(String url, InputStream requestBody) {
 		String[] paths = URLUtils.removeParamsSection(url)
 				.split("" + PATH_DELIM);
 		

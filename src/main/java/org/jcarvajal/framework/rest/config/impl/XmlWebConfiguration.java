@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  */
 public class XmlWebConfiguration implements WebConfiguration {
 
-	private final String WEB_FILE = "WEB-INF/web.xml";
+	private final String WEB_FILE = "/WEB-INF/web.xml";
 
 	private final String SERVLET_NODES = "servlet";
 	private final String SERVLET_NAME = "servlet-name";

@@ -48,16 +48,18 @@ public class MappingCsvResponseMarshaller implements ResponseMarshaller {
 		byte[] result = null;
 		if (object != null) {
 			List<Field> fieldsPresent = resolveFieldPresent(object);
-			StringBuffer buffer = new StringBuffer();
-			if (object instanceof Iterable) {
-				// If it's a collection.
-				marshallList((Iterable<Object>) object, fieldsPresent, buffer);
-			} else {
-				// Marshall only an item.
-				marshallItem(object, fieldsPresent, buffer);
+			if (!fieldsPresent.isEmpty()) {
+				StringBuffer buffer = new StringBuffer();
+				if (object instanceof Iterable) {
+					// If it's a collection.
+					marshallList((Iterable<Object>) object, fieldsPresent, buffer);
+				} else {
+					// Marshall only an item.
+					marshallItem(object, fieldsPresent, buffer);
+				}
+				
+				result = buffer.toString().getBytes();
 			}
-			
-			result = buffer.toString().getBytes();
 		}
 		
 		return result;
@@ -70,13 +72,35 @@ public class MappingCsvResponseMarshaller implements ResponseMarshaller {
 	 */
 	private List<Field> resolveFieldPresent(Object object) {
 		List<Field> fields = new ArrayList<Field>();
-		for (Field field : object.getClass().getDeclaredFields()) {
-			if (mapping.contains(getFieldTemplate(field.getName()))) {
-				fields.add(field);
+		
+		Class<?> clazz = resolveItemClass(object);
+		if (clazz != null) {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (mapping.contains(getFieldTemplate(field.getName()))) {
+					fields.add(field);
+				}
 			}
 		}
 		
 		return fields;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Class<?> resolveItemClass(Object object) {
+		Class<?> clazz = null;
+		if (object instanceof Iterable) {
+			Iterator<Object> it = ((Iterable<Object>) object).iterator();
+			if (it.hasNext()) {
+				Object item = it.next();
+				if (item != null) {
+					clazz = item.getClass();
+				}
+			}
+		} else {
+			clazz = object.getClass();
+		}
+		
+		return clazz;
 	}
 	
 	/**
@@ -111,11 +135,15 @@ public class MappingCsvResponseMarshaller implements ResponseMarshaller {
 	private void marshallItem(Object item, List<Field> fieldsPresent, StringBuffer buffer) 
 			throws OnRequestMappingInitializationException {		
 		try {
+			String itemText = mapping;
+			
 			for (Field field : fieldsPresent) {
-				buffer.append(mapping.replaceAll(
+				itemText = itemText.replaceAll(
 						Pattern.quote(getFieldTemplate(field.getName())), 
-						"" + ReflectionUtils.invokeGetField(item, field.getName())));
+						"" + ReflectionUtils.invokeGetField(item, field.getName()));
 			}
+			
+			buffer.append(itemText);
 		
 		} catch (Exception e) {
 			throw new OnRequestMappingInitializationException("Error in response marshall. Cause: %s", e.getMessage());

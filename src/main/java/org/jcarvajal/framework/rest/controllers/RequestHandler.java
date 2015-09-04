@@ -1,6 +1,6 @@
 package org.jcarvajal.framework.rest.controllers;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -119,10 +119,10 @@ public abstract class RequestHandler {
 	 * @return
 	 * @throws OnRequestException
 	 */
-	public final byte[] invoke(String url, OutputStream responseBody) throws OnRequestException {
+	public final byte[] invoke(String url, InputStream requestBody) throws OnRequestException {
 		byte[] response = null;
 		try {
-			Object[] params = resolveParams(url, responseBody);
+			Object[] params = resolveParams(url, requestBody);
 			
 			Object result = this.method.invoke(controller, params);
 			response = this.marshaller.marshall(result);
@@ -140,10 +140,10 @@ public abstract class RequestHandler {
 	 * @param responseBody
 	 * @return
 	 */
-	private Object[] resolveParams(String url, OutputStream responseBody) {
+	private Object[] resolveParams(String url, InputStream requestBody) {
 		Object[] paramValues = new Object[params.size()];
 		for (ParamResolver paramResolver : params) {
-			paramValues[paramResolver.getPosition()] = paramResolver.resolve(url, responseBody);
+			paramValues[paramResolver.getPosition()] = paramResolver.resolve(url, requestBody);
 		}
 		
 		return paramValues;

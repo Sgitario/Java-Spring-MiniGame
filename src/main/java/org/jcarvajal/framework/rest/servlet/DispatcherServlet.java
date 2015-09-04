@@ -1,6 +1,6 @@
 package org.jcarvajal.framework.rest.servlet;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
@@ -47,9 +47,9 @@ public abstract class DispatcherServlet {
 	 * @throws OnRequestException 
 	 */
 	public byte[] handle(URI requestURI, String requestMethod,
-			OutputStream responseBody) throws OnRequestException {
+			InputStream requestBody) throws OnRequestException {
 		return controllerManager.handle(requestURI.toString(), 
-				requestMethod, responseBody);
+				requestMethod, requestBody);
 	}
 	
 	public DependencyInjector getInjector() {
@@ -59,9 +59,10 @@ public abstract class DispatcherServlet {
 	/**
 	 * Initialize the injector.
 	 * @param injector
+	 * @throws OnRestInitializationException 
 	 * @throws Exception 
 	 */
-	protected void initInjector(InjectorComponent injectorInterface) {
+	protected void initInjector(InjectorComponent injectorInterface) throws OnRestInitializationException {
 		if (injectorInterface != null 
 				&& StringUtils.isNotEmpty(injectorInterface.getClassName())) {
 			

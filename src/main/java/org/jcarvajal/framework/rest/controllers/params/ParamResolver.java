@@ -1,6 +1,6 @@
 package org.jcarvajal.framework.rest.controllers.params;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 
 /**
  * The ParamResolver class will keep the position in the request method
@@ -30,5 +30,5 @@ public abstract class ParamResolver {
 	 * @param responseBody
 	 * @return
 	 */
-	public abstract Object resolve(String url, OutputStream responseBody);
+	public abstract Object resolve(String url, InputStream requestBody);
 }

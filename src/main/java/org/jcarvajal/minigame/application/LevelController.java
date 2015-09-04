@@ -48,7 +48,7 @@ public class LevelController {
 	 */
 	@RequestMapping(url = "/{levelId}/score", method = RequestMethod.POST)
 	public void addScore(@PathVariable(name = "levelId") int levelId,
-			@RequestParam(attr = "sessionKey") String sessionKey, @RequestBody int score) 
+			@RequestParam(attr = "sessionkey") String sessionKey, @RequestBody int score) 
 					throws UserNotFoundException {
 		if (sessionService.containsSessionKey(sessionKey)) {
 			int userId = sessionService.getUserIdBySessionKey(sessionKey);
@@ -67,8 +67,8 @@ public class LevelController {
 	 * @param levelId
 	 * @return
 	 */
-	@RequestMapping(url = "/{levelId}/score", method = RequestMethod.GET)
-	@ResponseMapping(map = "{userid}={score}")
+	@RequestMapping(url = "/{levelId}/highscorelist", method = RequestMethod.GET)
+	@ResponseMapping(map = "{userId}={score}")
 	public Collection<Score> highScoreList(@PathVariable(name = "levelId") int levelId) {
 		return scoreService.getHighScoreListByLevel(levelId);
 	}

@@ -1,6 +1,8 @@
 package org.jcarvajal.framework.rest.controllers.params;
 
-import java.io.OutputStream;
+import java.io.InputStream;
+
+import org.jcarvajal.framework.utils.IOUtils;
 
 /**
  * Resolve param value for request body (POST requests).
@@ -14,11 +16,10 @@ public class RequestBodyParamResolver extends ParamResolver {
 	}
 
 	@Override
-	public Object resolve(String url, OutputStream responseBody) {
+	public Object resolve(String url, InputStream requestBody) {
 		Integer value = null;
-		if (responseBody != null) {
-			String body = responseBody.toString();
-			
+		String body = IOUtils.toString(requestBody);
+		if (body != null) {
 			value = Integer.valueOf(body);
 		}
 		

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
 import org.jcarvajal.framework.di.impl.ConfigDependencyInjectorImpl;
+import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
 import org.jcarvajal.minigame.infrastructure.SessionRepository;
 import org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl;
@@ -30,12 +31,12 @@ private final String CONFIG_FILE = "/components.xml";
 	}
 	
 	@Test
-	public void init_thenComponentsAreSetUp() {
+	public void init_thenComponentsAreSetUp() throws OnRestInitializationException {
 		whenInit();
 		thenComponentsAreExpected();
 	}
 	
-	private void whenInit() {
+	private void whenInit() throws OnRestInitializationException {
 		injector.init();
 	}
 	

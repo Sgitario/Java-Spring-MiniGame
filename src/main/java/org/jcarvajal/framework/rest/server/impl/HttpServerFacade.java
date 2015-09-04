@@ -58,9 +58,9 @@ public class HttpServerFacade implements ServerFacade {
 		this.server.createContext(context, new HttpHandler() {
 
 			public void handle(HttpExchange exchange) throws IOException {
-				try {					
+				try {				
 					byte[] response = handler.handle(exchange.getRequestURI(), 
-							exchange.getRequestMethod(), exchange.getResponseBody());
+							exchange.getRequestMethod(), exchange.getRequestBody());
 					writeResponse(exchange, 200, response);
 		            
 				} catch (Exception ex) {
@@ -88,10 +88,15 @@ public class HttpServerFacade implements ServerFacade {
 	
 	private void writeResponse(HttpExchange exchange, int code, byte[] response) {
 		try {
-			exchange.sendResponseHeaders(code, response.length);
-			OutputStream os = exchange.getResponseBody();
-	        os.write(response);
-	        os.close();
+			if (response != null) {
+				exchange.sendResponseHeaders(code, response.length);
+				OutputStream os = exchange.getResponseBody();
+		        os.write(response);
+		        os.close();
+			} else {
+				exchange.sendResponseHeaders(code, 0);
+			}			
+			
 		} catch (IOException e) {
 			LOG.severe("Error writing http response. Cause: " + e.getMessage());
 		} finally {

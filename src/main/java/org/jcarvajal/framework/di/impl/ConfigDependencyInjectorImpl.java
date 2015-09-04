@@ -5,12 +5,11 @@ import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.jcarvajal.framework.di.Dependency;
 import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
-import org.jcarvajal.framework.rest.servlet.impl.ConfigurationDispatcherServlet;
+import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.utils.IOUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
@@ -23,9 +22,6 @@ import org.w3c.dom.Element;
  *
  */
 public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {	
-	private static final Logger LOG = Logger.getLogger(
-			ConfigurationDispatcherServlet.class.getName());
-
 	private static final String COMPONENT_ELEM = "component";
 	private static final String NAME = "name";
 	private static final String IMPLEMENTED_BY = "implementedBy";
@@ -35,7 +31,7 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 	
 	private String configFile;
 	
-	public void init() {
+	public void init() throws OnRestInitializationException {
 		InputStream is = null;
 		try {
 			is = getFileStream(configFile);
@@ -43,7 +39,7 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 			
 			initComponents(parseComponents(parser));
 		} catch (Exception ex) {
-			LOG.severe("Error when init Config Dependency Injector. Cause: " + ex.getMessage());
+			throw new OnRestInitializationException("Error when init Config Dependency Injector. Cause: %s. ", ex.getMessage());
 		} finally {
 			IOUtils.close(is);
 		}

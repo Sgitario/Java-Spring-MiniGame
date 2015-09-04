@@ -48,11 +48,12 @@ public class ReflectionUtils {
 			Map<String, String> params, Class<T> clazzTo) {
 		T result = null;
 		Object instance = createInstance(className, params);
-		if (instance != null 
-				&& clazzTo.isAssignableFrom(instance.getClass())) {
-			result = (T) instance;
-		} else {
-			LOG.severe(String.format("Class %s cannot be instantiated to %s", className, clazzTo.getName()));
+		if (instance != null) {
+			if (clazzTo.isAssignableFrom(instance.getClass())) {
+				result = (T) instance;
+			} else {
+				LOG.severe(String.format("Class %s cannot be instantiated to %s", className, clazzTo.getName()));
+			}
 		}
 	
 		return result;

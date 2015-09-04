@@ -7,3 +7,4 @@ Pending tasks
 - Add comments. (done)
 - Write documentation.
 - Refactor framework. (done)
+- Solution (done)

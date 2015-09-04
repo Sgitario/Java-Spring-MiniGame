@@ -1,6 +1,6 @@
 package org.jcarvajal.framework.rest.controllers.params;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 
 /**
  * Resolve param value for request parameters.
@@ -21,7 +21,7 @@ public class RequestParamResolver extends ParamResolver {
 	}
 
 	@Override
-	public Object resolve(String url, OutputStream responseBody) {
+	public Object resolve(String url, InputStream requestBody) {
 		String value = null;
 		if (url != null) {
 			String startWith = String.format(START_WITH_FORMAT, this.attrName);

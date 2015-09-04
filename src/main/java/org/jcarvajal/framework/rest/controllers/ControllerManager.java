@@ -1,6 +1,6 @@
 package org.jcarvajal.framework.rest.controllers;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -41,10 +41,10 @@ public abstract class ControllerManager {
 	 * @return
 	 * @throws OnRequestException
 	 */
-	public final byte[] handle(String url, String method, OutputStream responseBody) throws OnRequestException {
+	public final byte[] handle(String url, String method, InputStream requestBody) throws OnRequestException {
 		for (RequestHandler handler : handlers) {
 			if (handler.satisfy(url, method)) {
-				return handler.invoke(url, responseBody);
+				return handler.invoke(url, requestBody);
 			}
 		}
 		

@@ -3,8 +3,9 @@ package org.jcarvajal.framework.rest.controllers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.jcarvajal.framework.rest.controllers.annotations.AnnotationControllerManager;
 import org.jcarvajal.framework.rest.controllers.annotations.PathVariable;
@@ -119,12 +120,10 @@ public class AnnotationControllerManagerTest {
 	}
 	
 	private void whenUrlIsForPost() throws OnRequestException, IOException {
-		String text = "10";
-		byte[] stringByte = text.getBytes();
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream(text.length());
-	    bos.write(stringByte);
+		String text = "10";	    
+	    InputStream stream = new ByteArrayInputStream(text.getBytes());
 		
-		actualResponse = manager.handle("/post/5", RequestMethod.POST.toString(), bos);
+		actualResponse = manager.handle("/post/5", RequestMethod.POST.toString(), stream);
 	}
 	
 	private void thenResponsesMatch() {
