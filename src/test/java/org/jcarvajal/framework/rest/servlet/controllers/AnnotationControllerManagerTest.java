@@ -98,7 +98,7 @@ public class AnnotationControllerManagerTest {
 	
 	private void givenRegisterPostRequest() throws OnRequestMappingInitializationException {
 		controller = new EchoController();
-		expectedResponse = "THIS IS THE BODY and 6";
+		expectedResponse = "10 and 6";
 		manager.register(controller);
 	}
 	
@@ -119,7 +119,7 @@ public class AnnotationControllerManagerTest {
 	}
 	
 	private void whenUrlIsForPost() throws OnRequestException, IOException {
-		String text = "This is the body";
+		String text = "10";
 		byte[] stringByte = text.getBytes();
 	    ByteArrayOutputStream bos = new ByteArrayOutputStream(text.length());
 	    bos.write(stringByte);
@@ -166,8 +166,8 @@ public class AnnotationControllerManagerTest {
 		}
 		
 		@RequestMapping(url="/post/{value1}", method = RequestMethod.POST)
-		public String post(@PathVariable(name="value1") int value1, @RequestBody String body) {
-			return String.format("%s and %s", body.toUpperCase(), value1 + 1);
+		public String post(@PathVariable(name="value1") int value1, @RequestBody int body) {
+			return String.format("%s and %s", body, value1 + 1);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <injector class="org.jcarvajal.framework.di.ConfigDependencyInjectorImpl">
+    <injector class="org.jcarvajal.framework.di.impl.ConfigDependencyInjectorImpl">
         <param>
             <param-name>configFile</param-name>
             <param-value>/WEB-INF/components.xml</param-value>

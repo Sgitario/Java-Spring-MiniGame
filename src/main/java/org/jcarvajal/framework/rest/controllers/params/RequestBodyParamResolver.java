@@ -15,7 +15,14 @@ public class RequestBodyParamResolver extends ParamResolver {
 
 	@Override
 	public Object resolve(String url, OutputStream responseBody) {
-		return responseBody.toString();
+		Integer value = null;
+		if (responseBody != null) {
+			String body = responseBody.toString();
+			
+			value = Integer.valueOf(body);
+		}
+		
+		return value;
 	}
 
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.exceptions.InstantiationException;
 import org.jcarvajal.framework.di.instances.InitializationInstance;
-import org.jcarvajal.framework.utils.ReflectionUtils;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
 import org.jcarvajal.minigame.service.ScoreService;
 import org.jcarvajal.minigame.service.impl.ScoreServiceImpl;
@@ -30,8 +29,6 @@ public class InitializationInstanceTest {
 	@Before
 	public void setup() {
 		mockInjector = mock(DependencyInjectorBase.class);
-		
-		
 	}
 	
 	@Test
@@ -41,7 +38,6 @@ public class InitializationInstanceTest {
 		givenClassesToBind(ScoreService.class, ScoreServiceImpl.class);
 		whenCreateInstance();
 		thenInjectorReturnsImplInstance();
-		thenFieldIsNotNull("scoreRepository");
 	}
 	
 	private <T> void givenRegisteredInInjector(Class<T> bind) {
@@ -63,11 +59,5 @@ public class InitializationInstanceTest {
 		Object actual = instance.instance();
 		assertNotNull(actual);
 		assertTrue(implementedBy.isAssignableFrom(actual.getClass()));
-	}
-	
-	private void thenFieldIsNotNull(String fieldName) 
-			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Object value = ReflectionUtils.invokeGetField(instance.instance(), fieldName);
-		assertNotNull(value);
 	}
 }

@@ -44,7 +44,7 @@ public class XmlWebConfigurationTest {
 		Servlet servlet = actualMappings.get("/");
 		assertNotNull(servlet);
 		assertEquals("servlet-dispatcher", servlet.getName());
-		assertEquals("org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet", servlet.getClassName());
+		assertEquals("org.jcarvajal.framework.rest.servlet.impl.ConfigurationDispatcherServlet", servlet.getClassName());
 		assertEquals(1, servlet.getParams().size());
 		String paramValue = servlet.getParams().get("contextConfigLocation");
 		assertEquals("/servlet-dispatcher-config.xml", paramValue);

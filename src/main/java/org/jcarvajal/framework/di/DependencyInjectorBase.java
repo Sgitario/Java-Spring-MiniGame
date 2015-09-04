@@ -30,7 +30,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	 * In case of the class is not registered, the api will try to create it.
 	 */
 	@SuppressWarnings("unchecked")
-	public final <T> T get(String className) {
+	public <T> T get(String className) {
 		T object = null;
 		Instance facade = repository.get(className);
 		

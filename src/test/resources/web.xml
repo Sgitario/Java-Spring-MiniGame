@@ -4,7 +4,7 @@
       version="3.0">
 	<servlet>
 		<servlet-name>servlet-dispatcher</servlet-name>
-		<servlet-class>org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet</servlet-class>
+		<servlet-class>org.jcarvajal.framework.rest.servlet.impl.ConfigurationDispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/servlet-dispatcher-config.xml</param-value>

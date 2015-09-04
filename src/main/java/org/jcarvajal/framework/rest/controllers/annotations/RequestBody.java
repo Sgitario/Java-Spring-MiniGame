@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation will match the param to the post request body.
- * Only supports String.
+ * Only supports Integers.
  * 
  * @author jhilario
  *
