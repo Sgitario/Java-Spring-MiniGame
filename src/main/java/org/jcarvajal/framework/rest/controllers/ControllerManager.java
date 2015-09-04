@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.servlet.controllers;
+package org.jcarvajal.framework.rest.controllers;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import org.jcarvajal.framework.rest.exceptions.OnRequestException;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
-import org.jcarvajal.framework.rest.servlet.controllers.handlers.RequestHandler;
 
 /**
  * List of mappings for all controllers.
@@ -20,8 +19,18 @@ public abstract class ControllerManager {
 	private static final Logger LOG = Logger.getLogger(
 			ControllerManager.class.getName());
 	
+	/**
+	 * List of registered handlers.
+	 */
 	private List<RequestHandler> handlers = new ArrayList<RequestHandler>();
 	
+	/**
+	 * Register a controller instance.
+	 * This method will analyze the instance to resolve the handler properties
+	 * depending to the implementation of this manager. 
+	 * @param controller
+	 * @throws OnRequestMappingInitializationException
+	 */
 	public abstract void register(Object controller) throws OnRequestMappingInitializationException;
 	
 	/**
@@ -32,7 +41,7 @@ public abstract class ControllerManager {
 	 * @return
 	 * @throws OnRequestException
 	 */
-	public byte[] handle(String url, String method, OutputStream responseBody) throws OnRequestException {
+	public final byte[] handle(String url, String method, OutputStream responseBody) throws OnRequestException {
 		for (RequestHandler handler : handlers) {
 			if (handler.satisfy(url, method)) {
 				return handler.invoke(url, responseBody);
@@ -44,7 +53,12 @@ public abstract class ControllerManager {
 		return null;
 	}
 	
-	protected void initMapping(RequestHandler handler) 
+	/**
+	 * Finally add the mapping to the handler list.
+	 * @param handler
+	 * @throws OnRequestMappingInitializationException
+	 */
+	protected final void initMapping(RequestHandler handler) 
 			throws OnRequestMappingInitializationException {
 		handler.init();
 		handlers.add(handler);

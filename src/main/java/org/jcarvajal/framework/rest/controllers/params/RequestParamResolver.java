@@ -1,7 +1,12 @@
-package org.jcarvajal.framework.rest.servlet.controllers.handlers.params;
+package org.jcarvajal.framework.rest.controllers.params;
 
 import java.io.OutputStream;
 
+/**
+ * Resolve param value for request parameters.
+ * @author JoseCH
+ *
+ */
 public class RequestParamResolver extends ParamResolver {
 
 	private final String START_WITH_FORMAT = "%s=";

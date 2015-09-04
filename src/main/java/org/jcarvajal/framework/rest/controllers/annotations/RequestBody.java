@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.servlet.controllers.annotations;
+package org.jcarvajal.framework.rest.controllers.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

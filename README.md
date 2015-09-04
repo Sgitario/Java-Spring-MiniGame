@@ -4,6 +4,6 @@ Pending tasks
 
 - Refactor Parseable. (done)
 - Add unit tests.
-- Add comments.
+- Add comments. (done)
 - Write documentation.
-- Refactor framework.
+- Refactor framework. (done)

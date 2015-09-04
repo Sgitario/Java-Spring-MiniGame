@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.config;
+package org.jcarvajal.framework.rest.config.impl;
 
 import static org.jcarvajal.framework.xmlparser.XmlParser.readElemValue;
 
@@ -9,8 +9,10 @@ import java.util.Map.Entry;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import org.jcarvajal.framework.rest.config.WebConfiguration;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.servlet.Servlet;
+import org.jcarvajal.framework.utils.IOUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;
 import org.jcarvajal.framework.xmlparser.XmlParser;
@@ -43,9 +45,11 @@ public class XmlWebConfiguration implements WebConfiguration {
 	 * @throws OnRestInitializationException
 	 */
 	public void init() throws OnRestInitializationException {
+		InputStream is = null;
 		XmlParser parser = null;
 		try {
-			parser = new XmlParser(getFileStream(WEB_FILE));
+			is = getFileStream(WEB_FILE);
+			parser = new XmlParser(is);
 			
 			Map<String, Servlet> servlets = parseServlets(parser);
 			Map<String, String> mappings = parseMappings(parser);
@@ -55,9 +59,7 @@ public class XmlWebConfiguration implements WebConfiguration {
 		} catch (Exception e) {
 			throw new OnRestInitializationException(e, "Error starting xml web configuration");
 		} finally {
-			if (parser != null) {
-				parser.close();
-			}
+			IOUtils.close(is);
 		}
 	}
 

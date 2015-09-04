@@ -5,17 +5,16 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
+import org.jcarvajal.framework.rest.controllers.annotations.AnnotationControllerManager;
+import org.jcarvajal.framework.rest.controllers.annotations.PathVariable;
+import org.jcarvajal.framework.rest.controllers.annotations.RequestBody;
+import org.jcarvajal.framework.rest.controllers.annotations.RequestMapping;
+import org.jcarvajal.framework.rest.controllers.annotations.RequestParam;
+import org.jcarvajal.framework.rest.controllers.annotations.ResponseMapping;
 import org.jcarvajal.framework.rest.exceptions.OnRequestException;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.AnnotationControllerManager;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.PathVariable;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestBody;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestMapping;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestParam;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.ResponseMapping;
+import org.jcarvajal.framework.rest.models.RequestMethod;
 import org.junit.Before;
 import org.junit.Test;
 

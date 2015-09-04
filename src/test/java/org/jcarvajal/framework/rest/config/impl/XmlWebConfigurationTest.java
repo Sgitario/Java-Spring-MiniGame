@@ -1,11 +1,11 @@
-package org.jcarvajal.framework.rest.config;
+package org.jcarvajal.framework.rest.config.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Map;
 
-import org.jcarvajal.framework.rest.config.XmlWebConfiguration;
+import org.jcarvajal.framework.rest.config.impl.XmlWebConfiguration;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.servlet.Servlet;
 import org.junit.Before;

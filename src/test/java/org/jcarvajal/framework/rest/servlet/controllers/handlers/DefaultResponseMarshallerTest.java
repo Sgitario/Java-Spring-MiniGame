@@ -2,6 +2,7 @@ package org.jcarvajal.framework.rest.servlet.controllers.handlers;
 
 import static org.junit.Assert.*;
 
+import org.jcarvajal.framework.rest.controllers.marshallers.DefaultResponseMarshaller;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,12 +1,12 @@
-package org.jcarvajal.framework.di;
+package org.jcarvajal.framework.di.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import org.jcarvajal.framework.di.ConfigDependencyInjectorImpl;
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
+import org.jcarvajal.framework.di.impl.ConfigDependencyInjectorImpl;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
 import org.jcarvajal.minigame.infrastructure.SessionRepository;
 import org.jcarvajal.minigame.infrastructure.impl.MemoryScoreRepositoryImpl;

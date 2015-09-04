@@ -1,12 +1,12 @@
-package org.jcarvajal.framework.rest.servlet;
+package org.jcarvajal.framework.rest.servlet.impl;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import org.jcarvajal.framework.di.ConfigDependencyInjectorImpl;
+import org.jcarvajal.framework.di.impl.ConfigDependencyInjectorImpl;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
-import org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet;
+import org.jcarvajal.framework.rest.servlet.impl.ConfigurationDispatcherServlet;
 import org.jcarvajal.framework.rest.servlet.injector.DependencyInjector;
 import org.junit.Before;
 import org.junit.Test;

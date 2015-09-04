@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.servlet;
+package org.jcarvajal.framework.rest.servlet.impl;
 
 import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
 
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
+import org.jcarvajal.framework.rest.servlet.DispatcherServlet;
 import org.jcarvajal.framework.rest.servlet.injector.InjectorComponent;
 import org.jcarvajal.framework.utils.IOUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;

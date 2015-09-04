@@ -11,19 +11,32 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jcarvajal.framework.utils.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Parse a XML file and provide utility methods to parse the elements/attributes.
+ * @author JoseCH
+ *
+ */
 public class XmlParser {
 	
 	private final InputStream currentStream;
 	private final Document doc;
 	
-	public XmlParser(InputStream is) throws SAXException, IOException, ParserConfigurationException {
+	/**
+	 * Open the xml file. The input stream should be closed afterwards.
+	 * 
+	 * @param is
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	public XmlParser(InputStream is) 
+			throws SAXException, IOException, ParserConfigurationException {
 		currentStream = is;
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -32,10 +45,14 @@ public class XmlParser {
 		doc = builder.parse(currentStream);
 	}
 	
-	public void close() {
-		IOUtils.close(currentStream);
-	}
-	
+	/**
+	 * Parse the document root looking for elements 'elementName'
+	 * and return a list.
+	 * 
+	 * @param elementName
+	 * @param parseable
+	 * @return
+	 */
 	public <T> List<T> listElementsByTagName(String elementName,
 			Parseable<T> parseable) {
 		
@@ -53,24 +70,14 @@ public class XmlParser {
 		return map;
 	}
 	
-	public <T> Map<String, T> mapElementsByTagName(Element root, String elementName,
-			String key, Parseable<T> parseable) {
-		
-		Map<String, T> map = new LinkedHashMap<String, T>(); 
-		NodeList nodes = root.getElementsByTagName(elementName);
-		for (int index = 0; index < nodes.getLength(); index++) {
-			Node node = nodes.item(index);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				Element elem = (Element) node;
-				String keyValue = readElemValue(elem, key);
-				T value = parseable.parse(elem);
-				map.put(keyValue, value);
-			}
-		}
-		
-		return map;
-	}
-	
+	/**
+	 * Parse the document root looking for elements 'elementName'
+	 * and return a map.
+	 * 
+	 * @param elementName
+	 * @param parseable
+	 * @return
+	 */
 	public <T> Map<String, T> mapElementsByTagName(String elementName,
 			String key, Parseable<T> parseable) {
 		
@@ -89,6 +96,38 @@ public class XmlParser {
 		return map;
 	}
 	
+	/**
+	 * Parse an element 'root' looking for elements 'elementName'
+	 * and return a list.
+	 * 
+	 * @param elementName
+	 * @param parseable
+	 * @return
+	 */
+	public <T> Map<String, T> mapElementsByTagName(Element root, String elementName,
+			String key, Parseable<T> parseable) {
+		
+		Map<String, T> map = new LinkedHashMap<String, T>(); 
+		NodeList nodes = root.getElementsByTagName(elementName);
+		for (int index = 0; index < nodes.getLength(); index++) {
+			Node node = nodes.item(index);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				Element elem = (Element) node;
+				String keyValue = readElemValue(elem, key);
+				T value = parseable.parse(elem);
+				map.put(keyValue, value);
+			}
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * Parse an element from the document root.
+	 * @param paramName
+	 * @param parser
+	 * @return
+	 */
 	public <T> T readDocValue(String paramName, Parseable<T> parser) {
 		T value = null;
 		NodeList node = doc.getElementsByTagName(paramName);
@@ -100,14 +139,33 @@ public class XmlParser {
 		return value;
 	}
 	
+	/**
+	 * Utility to read an attribute value.
+	 * @param element
+	 * @param attrName
+	 * @return
+	 */
 	public static String readAttributeValue(Element element, String attrName) {
 		return element.getAttribute(attrName);
 	}
 	
+	/**
+	 * Utility to read an element value using a String parseable.
+	 * @param element
+	 * @param paramName
+	 * @return
+	 */
 	public static String readElemValue(Element element, String paramName) {		
 		return readElemValue(element, paramName, new StringParseable());
 	}
 	
+	/**
+	 * Utility to read an element value specifying a concrete parseable implementation.
+	 * @param element
+	 * @param paramName
+	 * @param parser
+	 * @return
+	 */
 	public static <T> T readElemValue(Element element, String paramName, Parseable<T> parser) {
 		T value = null;
 		NodeList node = element.getElementsByTagName(paramName);

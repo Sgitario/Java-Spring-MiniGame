@@ -5,11 +5,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.jcarvajal.framework.rest.controllers.ControllerManager;
+import org.jcarvajal.framework.rest.controllers.annotations.AnnotationControllerManager;
 import org.jcarvajal.framework.rest.exceptions.OnRequestException;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
-import org.jcarvajal.framework.rest.servlet.controllers.ControllerManager;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.AnnotationControllerManager;
 import org.jcarvajal.framework.rest.servlet.injector.DependencyInjector;
 import org.jcarvajal.framework.rest.servlet.injector.InjectorComponent;
 import org.jcarvajal.framework.utils.ReflectionUtils;
@@ -52,7 +52,7 @@ public abstract class DispatcherServlet {
 				requestMethod, responseBody);
 	}
 	
-	protected DependencyInjector getInjector() {
+	public DependencyInjector getInjector() {
 		return injector;
 	}
 	

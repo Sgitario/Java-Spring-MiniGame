@@ -1,5 +1,11 @@
-package org.jcarvajal.framework.rest.servlet.controllers;
+package org.jcarvajal.framework.rest.models;
 
+/**
+ * Request method type.
+ * Only supports GET and POST.
+ * @author JoseCH
+ *
+ */
 public enum RequestMethod {
 	GET("get"), POST("post");
 	

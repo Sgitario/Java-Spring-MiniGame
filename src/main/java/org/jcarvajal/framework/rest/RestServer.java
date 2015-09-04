@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.jcarvajal.framework.rest.config.WebConfiguration;
-import org.jcarvajal.framework.rest.config.XmlWebConfiguration;
+import org.jcarvajal.framework.rest.config.impl.XmlWebConfiguration;
 import org.jcarvajal.framework.rest.exceptions.OnRestInitializationException;
 import org.jcarvajal.framework.rest.server.ServerFacade;
 import org.jcarvajal.framework.rest.server.ServerFactory;

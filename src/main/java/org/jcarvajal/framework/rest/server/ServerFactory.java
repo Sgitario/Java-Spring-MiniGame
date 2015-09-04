@@ -13,6 +13,8 @@ import org.jcarvajal.framework.utils.ReflectionUtils;
 /**
  * Factory to isolate the build of Server instances.
  * 
+ * Only support instances of HttpServerFacades.
+ * 
  * @author JoseCH
  */
 public class ServerFactory {
@@ -78,7 +80,7 @@ public class ServerFactory {
 	 * @param className
 	 * @throws OnRestInitializationException 
 	 */
-	public ServerFactory addContext(String context, Servlet servlet) throws OnRestInitializationException {
+	private ServerFactory addContext(String context, Servlet servlet) throws OnRestInitializationException {
 		
 		DispatcherServlet handler = createDispatcher(servlet);
 		handler.init();

@@ -1,11 +1,11 @@
-package org.jcarvajal.framework.rest.servlet.controllers.annotations;
+package org.jcarvajal.framework.rest.controllers.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.jcarvajal.framework.rest.servlet.controllers.RequestMethod;
+import org.jcarvajal.framework.rest.models.RequestMethod;
 
 /**
  * Will register the method and url request.

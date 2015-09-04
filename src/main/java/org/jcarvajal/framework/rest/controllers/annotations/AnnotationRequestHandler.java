@@ -1,27 +1,45 @@
-package org.jcarvajal.framework.rest.servlet.controllers.handlers;
+package org.jcarvajal.framework.rest.controllers.annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jcarvajal.framework.rest.controllers.RequestHandler;
+import org.jcarvajal.framework.rest.controllers.marshallers.MappingCsvResponseMarshaller;
+import org.jcarvajal.framework.rest.controllers.params.ParamResolver;
+import org.jcarvajal.framework.rest.controllers.params.PathVariableParamResolver;
+import org.jcarvajal.framework.rest.controllers.params.RequestBodyParamResolver;
+import org.jcarvajal.framework.rest.controllers.params.RequestParamResolver;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
-import org.jcarvajal.framework.rest.servlet.controllers.RequestMethod;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.PathVariable;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestBody;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestMapping;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestParam;
-import org.jcarvajal.framework.rest.servlet.controllers.annotations.ResponseMapping;
-import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.ParamResolver;
-import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.PathVariableParamResolver;
-import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.RequestParamResolver;
-import org.jcarvajal.framework.rest.servlet.controllers.handlers.params.RequestBodyParamResolver;
+import org.jcarvajal.framework.rest.models.RequestMethod;
 import org.jcarvajal.framework.utils.URLUtils;
 
+/**
+ * Implementation of RequestHandler to define a handler using annotations.
+ * Example:
+ * @RequestMapping(url="/test/{val}", method="GET")
+ * public String test(@PathVariable('val) int val) {
+ * 	...
+ * }
+ * 
+ * The handler method "test" will satisfy an incoming request "/test/111?attr=value..." 
+ * with method "GET".
+ * 
+ * @author JoseCH
+ *
+ */
 public class AnnotationRequestHandler extends RequestHandler {
 
 	private final RequestMapping requestMapping;
 	
+	/**
+	 * Initializes a new instance of the AnnotationRequestHandler class.
+	 * @param controller
+	 * @param method
+	 * @param requestMapping
+	 * @throws OnRequestMappingInitializationException
+	 */
 	public AnnotationRequestHandler(Object controller, Method method, 
 			RequestMapping requestMapping) 
 			throws OnRequestMappingInitializationException {
@@ -86,6 +104,12 @@ public class AnnotationRequestHandler extends RequestHandler {
 		return "^" + regExp + "(\\?.+)?";
 	}
 	
+	/**
+	 * Init the response marshaller.
+	 * Only supports CSV. For future, having a factory to create response marshallers instances.
+	 * @param method
+	 * @throws OnRequestMappingInitializationException
+	 */
 	private void initResponseMarshaller(Method method) 
 			throws OnRequestMappingInitializationException {
 		if (method.isAnnotationPresent(ResponseMapping.class)) {

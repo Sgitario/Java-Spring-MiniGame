@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.di;
+package org.jcarvajal.framework.di.impl;
 
 import static org.jcarvajal.framework.xmlparser.XmlParser.readAttributeValue;
 
@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.jcarvajal.framework.di.Dependency;
+import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.exceptions.OnDependencyInjectionInitializationException;
-import org.jcarvajal.framework.rest.servlet.ConfigurationDispatcherServlet;
+import org.jcarvajal.framework.rest.servlet.impl.ConfigurationDispatcherServlet;
 import org.jcarvajal.framework.utils.IOUtils;
 import org.jcarvajal.framework.xmlparser.Parseable;
 import org.jcarvajal.framework.xmlparser.StringParseable;

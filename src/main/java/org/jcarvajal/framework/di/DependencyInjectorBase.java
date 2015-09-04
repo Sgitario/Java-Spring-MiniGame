@@ -30,7 +30,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	 * In case of the class is not registered, the api will try to create it.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(String className) {
+	public final <T> T get(String className) {
 		T object = null;
 		Instance facade = repository.get(className);
 		
@@ -56,7 +56,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	 * @param components
 	 * @throws InstantiationException 
 	 */
-	protected synchronized void initComponents(List<Dependency> components) 
+	protected final synchronized void initComponents(List<Dependency> components) 
 			throws InstantiationException {
 		if (components != null) {
 			for (Dependency component : components) {
@@ -70,7 +70,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	 * @param components
 	 * @throws InstantiationException 
 	 */
-	protected synchronized Instance initComponent(Dependency component) 
+	protected final synchronized Instance initComponent(Dependency component) 
 			throws InstantiationException {
 		Instance instance = null;
 		if (component != null) {

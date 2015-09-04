@@ -1,10 +1,9 @@
-package org.jcarvajal.framework.rest.servlet.controllers.annotations;
+package org.jcarvajal.framework.rest.controllers.annotations;
 
 import java.lang.reflect.Method;
 
+import org.jcarvajal.framework.rest.controllers.ControllerManager;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
-import org.jcarvajal.framework.rest.servlet.controllers.ControllerManager;
-import org.jcarvajal.framework.rest.servlet.controllers.handlers.AnnotationRequestHandler;
 
 /**
  * Register all mappings of the controller based on their annotations.

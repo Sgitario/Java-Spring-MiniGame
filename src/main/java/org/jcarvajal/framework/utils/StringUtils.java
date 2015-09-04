@@ -1,5 +1,10 @@
 package org.jcarvajal.framework.utils;
 
+/**
+ * Utility class for String operations.
+ * @author JoseCH
+ *
+ */
 public class StringUtils {
 	public static final String EMPTY = "";
 

@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.servlet.controllers.handlers.params;
+package org.jcarvajal.framework.rest.controllers.params;
 
 import java.io.OutputStream;
 
@@ -6,6 +6,11 @@ import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationExc
 import org.jcarvajal.framework.utils.StringUtils;
 import org.jcarvajal.framework.utils.URLUtils;
 
+/**
+ * Resolve param value for path variables.
+ * @author JoseCH
+ *
+ */
 public class PathVariableParamResolver extends ParamResolver {
 
 	private static final String FORMAT = "{%s}";

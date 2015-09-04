@@ -5,6 +5,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Simple implementation of Parseable class to parse an element into a string
+ * by specifying the element name.
+ * @author JoseCH
+ *
+ */
 public class StringParseable implements Parseable<String> {
 
 	private String elemName;
