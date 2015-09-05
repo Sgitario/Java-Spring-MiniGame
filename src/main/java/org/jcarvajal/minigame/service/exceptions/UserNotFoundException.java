@@ -1,4 +1,4 @@
-package org.jcarvajal.minigame.exceptions;
+package org.jcarvajal.minigame.service.exceptions;
 
 /**
  * This exception is raised when the session key cannot be found.

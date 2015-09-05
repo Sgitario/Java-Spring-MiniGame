@@ -1,6 +1,6 @@
 package org.jcarvajal.minigame.service;
 
-import org.jcarvajal.minigame.exceptions.UserNotFoundException;
+import org.jcarvajal.minigame.service.exceptions.UserNotFoundException;
 
 /**
  * Session services with operations for:

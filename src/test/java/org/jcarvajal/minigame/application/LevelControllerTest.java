@@ -2,9 +2,9 @@ package org.jcarvajal.minigame.application;
 
 import static org.mockito.Mockito.*;
 
-import org.jcarvajal.minigame.exceptions.UserNotFoundException;
 import org.jcarvajal.minigame.service.ScoreService;
 import org.jcarvajal.minigame.service.SessionService;
+import org.jcarvajal.minigame.service.exceptions.UserNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -8,9 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.jcarvajal.minigame.exceptions.UserNotFoundException;
 import org.jcarvajal.minigame.infrastructure.SessionRepository;
 import org.jcarvajal.minigame.infrastructure.entities.Session;
+import org.jcarvajal.minigame.service.exceptions.UserNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
