@@ -9,3 +9,5 @@ Pending tasks
 - Write documentation.
 - Refactor framework. (done)
 - Solution (done)
+
+Build solution: mvn clean compile assembly:single

@@ -1,4 +1,4 @@
-package org.jcarvajal.minigame.entities;
+package org.jcarvajal.minigame.infrastructure.entities;
 
 public class Score implements Comparable<Score> {
 	private int userId;

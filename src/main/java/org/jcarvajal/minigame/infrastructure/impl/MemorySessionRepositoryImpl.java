@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.jcarvajal.minigame.entities.Session;
 import org.jcarvajal.minigame.infrastructure.SessionRepository;
+import org.jcarvajal.minigame.infrastructure.entities.Session;
 
 /**
  * Implementation of SessionRepository.

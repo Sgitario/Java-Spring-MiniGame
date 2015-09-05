@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
-import org.jcarvajal.minigame.entities.Session;
+import org.jcarvajal.minigame.infrastructure.entities.Session;
 import org.junit.Before;
 import org.junit.Test;
 

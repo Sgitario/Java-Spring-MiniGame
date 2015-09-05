@@ -2,7 +2,7 @@ package org.jcarvajal.minigame.infrastructure;
 
 import java.util.Collection;
 
-import org.jcarvajal.minigame.entities.Score;
+import org.jcarvajal.minigame.infrastructure.entities.Score;
 
 public interface ScoreRepository {
 

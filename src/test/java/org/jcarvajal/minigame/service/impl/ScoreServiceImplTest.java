@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.jcarvajal.minigame.entities.Score;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
+import org.jcarvajal.minigame.infrastructure.entities.Score;
 import org.junit.Before;
 import org.junit.Test;
 

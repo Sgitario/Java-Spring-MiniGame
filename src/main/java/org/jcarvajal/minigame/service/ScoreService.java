@@ -2,7 +2,7 @@ package org.jcarvajal.minigame.service;
 
 import java.util.Collection;
 
-import org.jcarvajal.minigame.entities.Score;
+import org.jcarvajal.minigame.infrastructure.entities.Score;
 
 /**
  * Score services with operations for:

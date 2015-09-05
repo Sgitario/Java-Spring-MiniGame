@@ -3,8 +3,8 @@ package org.jcarvajal.minigame.service.impl;
 import java.util.Collection;
 
 import org.jcarvajal.framework.di.annotations.Autowired;
-import org.jcarvajal.minigame.entities.Score;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
+import org.jcarvajal.minigame.infrastructure.entities.Score;
 import org.jcarvajal.minigame.service.ScoreService;
 
 public class ScoreServiceImpl implements ScoreService {

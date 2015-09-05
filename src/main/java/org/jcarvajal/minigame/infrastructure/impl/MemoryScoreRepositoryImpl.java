@@ -7,8 +7,8 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import org.jcarvajal.minigame.entities.Score;
 import org.jcarvajal.minigame.infrastructure.ScoreRepository;
+import org.jcarvajal.minigame.infrastructure.entities.Score;
 
 /**
  * Implementation of the ScoreRepository.

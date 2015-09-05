@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcarvajal.minigame.entities.Score;
+import org.jcarvajal.minigame.infrastructure.entities.Score;
 import org.junit.Before;
 import org.junit.Test;
 

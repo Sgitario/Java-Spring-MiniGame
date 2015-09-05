@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.jcarvajal.framework.di.annotations.Autowired;
-import org.jcarvajal.minigame.entities.Session;
 import org.jcarvajal.minigame.exceptions.UserNotFoundException;
 import org.jcarvajal.minigame.infrastructure.SessionRepository;
+import org.jcarvajal.minigame.infrastructure.entities.Session;
 import org.jcarvajal.minigame.service.SessionService;
 
 /**
