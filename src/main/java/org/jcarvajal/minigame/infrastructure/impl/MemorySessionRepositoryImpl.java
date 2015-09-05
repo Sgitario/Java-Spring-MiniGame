@@ -23,14 +23,12 @@ public class MemorySessionRepositoryImpl implements SessionRepository {
 	
 	private Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 	
-	public void deleteSession(Session session) {
-		if (session != null) {
-			sessions.remove(session.getSessionKey());
-		}
-	}
-	
 	public Session getSession(String sessionKey) {
 		return sessions.get(sessionKey);
+	}
+	
+	public Collection<Session> getSessions() {
+		return sessions.values();
 	}
 	
 	public Session getSessionByUserId(int userId) {
@@ -45,14 +43,15 @@ public class MemorySessionRepositoryImpl implements SessionRepository {
 		return found;
 	}
 	
-	public Collection<Session> getSessions() {
-		return sessions.values();
-	}
-	
 	public void saveSession(Session session) {
 		if (session != null) {
-			deleteSession(session);
 			sessions.put(session.getSessionKey(), session);
+		}
+	}
+	
+	public void deleteSession(Session session) {
+		if (session != null) {
+			sessions.remove(session.getSessionKey());
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.controllers.params;
+package org.jcarvajal.framework.rest.controllers.annotations.params;
 
 import java.io.InputStream;
 

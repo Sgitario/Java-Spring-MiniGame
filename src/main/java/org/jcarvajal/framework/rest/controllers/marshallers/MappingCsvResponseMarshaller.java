@@ -146,7 +146,8 @@ public class MappingCsvResponseMarshaller implements ResponseMarshaller {
 			buffer.append(itemText);
 		
 		} catch (Exception e) {
-			throw new OnRequestMappingInitializationException("Error in response marshall. Cause: %s", e.getMessage());
+			throw new OnRequestMappingInitializationException(
+					"Error in response marshall. Cause: %s", e.getMessage());
 		} 
 	}
 	

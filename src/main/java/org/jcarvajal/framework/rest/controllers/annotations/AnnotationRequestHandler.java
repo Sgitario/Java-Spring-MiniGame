@@ -5,14 +5,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jcarvajal.framework.rest.RequestMethod;
 import org.jcarvajal.framework.rest.controllers.RequestHandler;
+import org.jcarvajal.framework.rest.controllers.annotations.params.ParamResolver;
+import org.jcarvajal.framework.rest.controllers.annotations.params.PathVariableParamResolver;
+import org.jcarvajal.framework.rest.controllers.annotations.params.RequestBodyParamResolver;
+import org.jcarvajal.framework.rest.controllers.annotations.params.RequestParamResolver;
 import org.jcarvajal.framework.rest.controllers.marshallers.MappingCsvResponseMarshaller;
-import org.jcarvajal.framework.rest.controllers.params.ParamResolver;
-import org.jcarvajal.framework.rest.controllers.params.PathVariableParamResolver;
-import org.jcarvajal.framework.rest.controllers.params.RequestBodyParamResolver;
-import org.jcarvajal.framework.rest.controllers.params.RequestParamResolver;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
-import org.jcarvajal.framework.rest.models.RequestMethod;
 import org.jcarvajal.framework.utils.URLUtils;
 
 /**

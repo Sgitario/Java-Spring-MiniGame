@@ -31,6 +31,14 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 	
 	private String configFile;
 	
+	public String getConfigFile() {
+		return configFile;
+	}
+	
+	public void setConfigFile(String configFile) {
+		this.configFile = configFile;
+	}
+	
 	public void init() throws OnRestInitializationException {
 		InputStream is = null;
 		try {
@@ -43,14 +51,6 @@ public class ConfigDependencyInjectorImpl extends DependencyInjectorBase {
 		} finally {
 			IOUtils.close(is);
 		}
-	}
-
-	public String getConfigFile() {
-		return configFile;
-	}
-	
-	public void setConfigFile(String configFile) {
-		this.configFile = configFile;
 	}
 	
 	protected InputStream getFileStream(String file) throws OnDependencyInjectionInitializationException {

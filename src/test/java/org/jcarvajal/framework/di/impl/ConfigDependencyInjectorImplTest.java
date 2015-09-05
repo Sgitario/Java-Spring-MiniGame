@@ -20,20 +20,56 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ConfigDependencyInjectorImplTest {
-private final String CONFIG_FILE = "/components.xml";
+	private final String CONFIG_FILE = "/components.xml";
 	
 	private ConfigDependencyInjectorImpl injector;
 	
 	@Before
-	public void setup() throws OnDependencyInjectionInitializationException {
+	public void setup() {
 		injector = spy(new ConfigDependencyInjectorImpl());
-		when(injector.getFileStream(anyString())).thenReturn(this.getClass().getResourceAsStream(CONFIG_FILE));
 	}
 	
+	/**
+	 * When components file not found.
+	 * Then exception should be raised.
+	 * @throws OnRestInitializationException
+	 */
+	@Test(expected = OnRestInitializationException.class)
+	public void init_whenFileNotFound_thenExceptionIsRaised() throws OnRestInitializationException {
+		whenInit();
+	}
+	
+	/**
+	 * When components file not exist.
+	 * Then exception should be raised.
+	 * @throws OnRestInitializationException
+	 */
+	@Test(expected = OnRestInitializationException.class)
+	public void init_whenFileNotExist_thenExceptionIsRaised() throws OnRestInitializationException {
+		givenComponentsFileDoesNotExist();
+		whenInit();
+	}
+	
+	/**
+	 * When init the xml in test/resources.
+	 * Then all their components should have been properly parsed and registered.
+	 * @throws OnDependencyInjectionInitializationException 
+	 * @throws OnRestInitializationException
+	 */
 	@Test
-	public void init_thenComponentsAreSetUp() throws OnRestInitializationException {
+	public void init_thenComponentsAreSetUp() 
+			throws OnDependencyInjectionInitializationException, OnRestInitializationException {
+		givenComponentsFileInTestResources();
 		whenInit();
 		thenComponentsAreExpected();
+	}
+	
+	private void givenComponentsFileDoesNotExist() {
+		injector.setConfigFile("DOES NOT EXIST");
+	}
+	
+	private void givenComponentsFileInTestResources() throws OnDependencyInjectionInitializationException {
+		when(injector.getFileStream(anyString())).thenReturn(this.getClass().getResourceAsStream(CONFIG_FILE));
 	}
 	
 	private void whenInit() throws OnRestInitializationException {

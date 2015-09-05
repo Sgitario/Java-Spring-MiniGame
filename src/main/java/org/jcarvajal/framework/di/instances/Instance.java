@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.jcarvajal.framework.utils.ReflectionUtils;
+import org.jcarvajal.framework.utils.StringUtils;
 import org.jcarvajal.framework.di.DependencyInjectorBase;
 import org.jcarvajal.framework.di.annotations.Autowired;
 import org.jcarvajal.framework.di.annotations.Init;
@@ -43,9 +44,13 @@ public abstract class Instance {
 			DependencyInjectorBase injector) 
 			throws InstantiationException {
 		this.bindClassName = bindClassName;
-		this.implClassName = implClassName;
-		this.params = params;
+		String implementedBy = implClassName;
+		if (!StringUtils.isNotEmpty(implClassName)) {
+			implementedBy = this.bindClassName;
+		}
 		
+		this.implClassName = implementedBy;
+		this.params = params;
 		this.injector = injector;
 		
 		onInit();

@@ -1,4 +1,4 @@
-package com.jcarvajal.framework.utils;
+package org.jcarvajal.framework.utils;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,7 @@ public class StringUtilsTest {
 	private String value;
 	private boolean actual;
 	private String actualValue;
+	private int actualCount;
 	
 	@Test
 	public void isNotEmpty_whenNull_thenReturnTrue() {
@@ -53,6 +54,13 @@ public class StringUtilsTest {
 		thenResultIs("Test");
 	}
 	
+	@Test
+	public void countCharacters_whenCountTest_thenShouldReturn2() {
+		givenString("test");
+		whenCountCharacters('t');
+		thenCountIs(2);
+	}
+	
 	private void givenString(String val) {
 		value = val;
 	}
@@ -65,6 +73,10 @@ public class StringUtilsTest {
 		actualValue = StringUtils.capitalize(value);
 	}
 	
+	private void whenCountCharacters(char character) {
+		actualCount = StringUtils.countCharacters(value, character);
+	}
+	
 	private void thenIsEmpty() {
 		assertFalse(actual);
 	}
@@ -75,5 +87,9 @@ public class StringUtilsTest {
 	
 	private void thenResultIs(String expected) {
 		assertEquals(expected, actualValue);
+	}
+	
+	private void thenCountIs(int expected) {
+		assertEquals(expected, actualCount);
 	}
 }

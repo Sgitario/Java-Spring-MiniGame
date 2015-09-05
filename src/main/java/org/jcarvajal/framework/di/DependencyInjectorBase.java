@@ -9,7 +9,6 @@ import org.jcarvajal.framework.di.exceptions.InstantiationException;
 import org.jcarvajal.framework.di.instances.InitializationInstance;
 import org.jcarvajal.framework.di.instances.Instance;
 import org.jcarvajal.framework.rest.servlet.injector.DependencyInjector;
-import org.jcarvajal.framework.utils.StringUtils;
 
 /**
  * The DependencyInjectorBase provides an implementation of the DependencyInjector
@@ -36,11 +35,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 		
 		// if not found, try to register it
 		if (facade == null) {
-			try {
-				facade = initComponent(new Dependency(className));
-			} catch (InstantiationException e) {
-				LOG.warning(String.format("Instance %s cannot be resolved", className));
-			}
+			facade = initComponent(new Dependency(className));
 		}
 		
 		// If finally found, then instantiate it.
@@ -56,8 +51,7 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	 * @param components
 	 * @throws InstantiationException 
 	 */
-	protected final synchronized void initComponents(List<Dependency> components) 
-			throws InstantiationException {
+	protected final synchronized void initComponents(List<Dependency> components) {
 		if (components != null) {
 			for (Dependency component : components) {
 				initComponent(component);
@@ -70,25 +64,21 @@ public abstract class DependencyInjectorBase implements DependencyInjector {
 	 * @param components
 	 * @throws InstantiationException 
 	 */
-	protected final synchronized Instance initComponent(Dependency component) 
-			throws InstantiationException {
+	protected final synchronized Instance initComponent(Dependency component) {
 		Instance instance = null;
 		if (component != null) {
 			String bindTo = component.getBindTo();
-			if (!repository.containsKey(bindTo)) {
-				Map<String, String> params = component.getParams();
-				String implementedBy = component.getImplementedBy();
-				if (!StringUtils.isNotEmpty(implementedBy)) {
-					// If implementedBy not present, use name attribute.
-					implementedBy = component.getBindTo();
-				}
-				
-				instance = new InitializationInstance(bindTo, implementedBy, params, this);
-				repository.put(bindTo, instance);
-				
-			} else {
-				LOG.warning(String.format("Componenty %s duplicated in config file", bindTo));
-			}
+			if (!repository.containsKey(bindTo)) {				
+				try {
+					instance = new InitializationInstance(bindTo, 
+							component.getImplementedBy(), 
+							component.getParams(), 
+							this);
+					repository.put(bindTo, instance);
+				} catch (InstantiationException e) {
+					LOG.warning(String.format("Instance %s cannot be resolved", bindTo));
+				}				
+			} 
 		}
 		
 		return instance;

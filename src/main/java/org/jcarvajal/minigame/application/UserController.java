@@ -2,9 +2,9 @@ package org.jcarvajal.minigame.application;
 
 import org.jcarvajal.framework.di.annotations.Autowired;
 import org.jcarvajal.framework.di.annotations.Init;
+import org.jcarvajal.framework.rest.RequestMethod;
 import org.jcarvajal.framework.rest.controllers.annotations.PathVariable;
 import org.jcarvajal.framework.rest.controllers.annotations.RequestMapping;
-import org.jcarvajal.framework.rest.models.RequestMethod;
 import org.jcarvajal.framework.scheduler.SchedulerService;
 import org.jcarvajal.minigame.service.SessionService;
 
@@ -30,6 +30,17 @@ public class UserController {
 		this.scheduler = scheduler;
 	}
 	
+	@Init
+	public void scheduleRemoveSessionsJob() {
+		scheduler.scheduleJob(new Runnable() {
+
+			public void run() {
+				sessionService.removeExpiredSessions();
+			}
+			
+		});
+	}
+	
 	/**
 	 * This function returns a session key in the form of a string (without spaces or “strange” characters) 
 	 * which shall be valid for use with the other functions for 10 minutes.
@@ -40,16 +51,5 @@ public class UserController {
 	@RequestMapping(url = "/{userId}/login", method = RequestMethod.GET)
 	public String login(@PathVariable(name = "userId") int userId) {
 		return sessionService.getSessionKey(userId);
-	}
-	
-	@Init
-	public void scheduleRemoveSessionsJob() {
-		scheduler.scheduleJob(new Runnable() {
-
-			public void run() {
-				sessionService.removeExpiredSessions();
-			}
-			
-		});
 	}
 }

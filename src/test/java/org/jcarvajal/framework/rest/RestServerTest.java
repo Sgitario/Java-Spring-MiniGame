@@ -1,6 +1,7 @@
 package org.jcarvajal.framework.rest;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -9,7 +10,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -35,6 +35,7 @@ public class RestServerTest {
 	
 	private boolean actualServerStarted;
 	
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setup() throws OnRestInitializationException {
 		mockServerFacade = mock(ServerFacade.class);
@@ -59,6 +60,7 @@ public class RestServerTest {
 		givenServletsInWebConfig();
 		whenServerStarts();
 		thenServerIsProperlyConfigured();
+		thenServerStarted();
 	}
 	
 	private void givenServerCannotStart() {
@@ -69,6 +71,7 @@ public class RestServerTest {
 		expectedServlets = new LinkedHashMap<String, Servlet>();
 		expectedServlets.put("key1", new Servlet(UUID.randomUUID().toString(), UUID.randomUUID().toString(), null));
 		when(mockWebConfiguration.getServlets()).thenReturn(expectedServlets);
+		when(mockServerFacade.isStarted()).thenReturn(true);
 	}
 	
 	private void whenServerStarts() throws OnRestInitializationException {
@@ -77,6 +80,10 @@ public class RestServerTest {
 	
 	private void thenServerNotStarted() {
 		assertFalse(actualServerStarted);
+	}
+	
+	private void thenServerStarted() {
+		assertTrue(actualServerStarted);
 	}
 	
 	private void thenServerIsProperlyConfigured() throws OnRestInitializationException {

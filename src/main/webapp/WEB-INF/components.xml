@@ -14,7 +14,7 @@
         name="org.jcarvajal.minigame.service.SessionService">
         <param>
         	<param-name>sessionExpiredMinutes</param-name>
-        	<param-value>10</param-value>
+        	<param-value>600</param-value>
         </param>
     </component>
     <component implementedBy="org.jcarvajal.minigame.service.impl.ScoreServiceImpl"

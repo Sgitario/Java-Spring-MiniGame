@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.jcarvajal.framework.rest.models.RequestMethod;
+import org.jcarvajal.framework.rest.RequestMethod;
 
 /**
  * Will register the method and url request.

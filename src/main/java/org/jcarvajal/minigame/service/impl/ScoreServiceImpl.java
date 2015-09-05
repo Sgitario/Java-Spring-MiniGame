@@ -30,6 +30,10 @@ public class ScoreServiceImpl implements ScoreService {
 		}
 	}
 	
+	/**
+	 * Delegate this operation to the repository bcause simplicity, 
+	 * but this logic should be implemented in the service.
+	 */
 	public Collection<Score> getHighScoreListByLevel(int levelId) {
 		return scoreRepository.getScoreByLevelId(levelId);
 	}

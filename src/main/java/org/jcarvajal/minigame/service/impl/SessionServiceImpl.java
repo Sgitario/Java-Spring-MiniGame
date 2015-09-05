@@ -22,19 +22,19 @@ public class SessionServiceImpl implements SessionService {
 	@Autowired
 	private SessionRepository sessionRepository;
 	
-	private int sessionExpiredMinutes;
+	private int sessionExpiredSeconds;
 	
 	public void setSessionRepository(SessionRepository sessionRepository) {
 		this.sessionRepository = sessionRepository;
 	}
 	
-	public void setSessionExpiredMinutes(String sessionExpiredMinutes) {
-		this.sessionExpiredMinutes = Integer.valueOf(sessionExpiredMinutes);
+	public void setSessionExpiredSeconds(String sessionExpiredSeconds) {
+		this.sessionExpiredSeconds = Integer.valueOf(sessionExpiredSeconds);
 	}
 	
 	public String getSessionKey(int userId) {
 		Session session = sessionRepository.getSessionByUserId(userId);
-		if (session == null || isSessionExpired(session)) {
+		if (!isValidSession(session)) {
 			// If session not found or it has expired, recreate it.
 			session = new Session();
 			session.setUserId(userId);
@@ -49,13 +49,13 @@ public class SessionServiceImpl implements SessionService {
 	
 	public boolean containsSessionKey(String sessionKey) {
 		Session session = sessionRepository.getSession(sessionKey);
-		return session != null;
+		return isValidSession(session);
 	}
 	
 	public int getUserIdBySessionKey(String sessionKey) 
 			throws UserNotFoundException {
 		Session session = sessionRepository.getSession(sessionKey);
-		if (session == null) {
+		if (!isValidSession(session)) {
 			throw new UserNotFoundException("Session key %s cannot be found. ", sessionKey);
 		}
 		
@@ -66,7 +66,7 @@ public class SessionServiceImpl implements SessionService {
 		int numDeletes = 0;
 		List<Session> sessions = new ArrayList<Session>(sessionRepository.getSessions());
 		for (Session session : sessions) {
-			if (isSessionExpired(session)) {
+			if (!isValidSession(session)) {
 				sessionRepository.deleteSession(session);
 				numDeletes++;
 			}
@@ -79,10 +79,10 @@ public class SessionServiceImpl implements SessionService {
 		return UUID.randomUUID().toString();
 	}
 	
-	private boolean isSessionExpired(Session session) {
+	private boolean isValidSession(Session session) {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MINUTE, - sessionExpiredMinutes);
+		cal.add(Calendar.SECOND, - sessionExpiredSeconds);
 		long expiredSession = cal.getTime().getTime();
-		return session != null && session.getCreatedAt() <= expiredSession; 
+		return session != null && session.getCreatedAt() > expiredSession; 
 	}
 }

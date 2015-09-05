@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.models;
+package org.jcarvajal.framework.rest;
 
 /**
  * Request method type.
