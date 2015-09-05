@@ -24,6 +24,7 @@ public class RestServer {
 	private final int port;
 	private final ServerFactory serverFactory;
 	private final WebConfiguration config;
+	private ServerFacade currentInstance;
 	
 	/**
 	 * Initializes a new instace of the RestServer class using the default impl.
@@ -52,18 +53,28 @@ public class RestServer {
 	 */
 	public boolean start() throws OnRestInitializationException {
 				
-		ServerFacade server = serverFactory
+		currentInstance = serverFactory
 				.startServer(port)
 				.addContext(config.getServlets())
 				.get();
 		
-		if (server.isStarted()) {
+		if (currentInstance.isStarted()) {
 			LOG.info(String.format("Server started at %s", new Date()));
 			LOG.info(String.format("Server listening on %s", this.port));
 		} else {
 			LOG.warning("Server not started");
 		}
 		
-		return server.isStarted();
+		return currentInstance.isStarted();
+	}
+
+	/**
+	 * Stop the server.
+	 */
+	public void stop() {
+		if (currentInstance != null) {
+			currentInstance.stop();
+			currentInstance = null;
+		}
 	}
 }

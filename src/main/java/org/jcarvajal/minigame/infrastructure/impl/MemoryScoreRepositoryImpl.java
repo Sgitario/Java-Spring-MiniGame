@@ -2,9 +2,9 @@ package org.jcarvajal.minigame.infrastructure.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.jcarvajal.minigame.entities.Score;
@@ -25,7 +25,7 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 			MemoryScoreRepositoryImpl.class.getName());
 	
 	private Map<Integer, TreeSet<Score>> scores 
-		= new HashMap<Integer, TreeSet<Score>>();
+		= new ConcurrentHashMap<Integer, TreeSet<Score>>();
 	private int limitScores = 15; // default 15 
 	
 	public void setLimitScores(String limitScores) {
@@ -63,15 +63,16 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 		return found;
 	}
 	
-	public synchronized void saveScore(Score score) {
+	public void saveScore(Score score) {
 		if (score != null) {
 			TreeSet<Score> scoresByLevel = initializeScoresByLevel(score.getLevelId()); 
-			
-			// Update
-			scoresByLevel.add(score);
-			
-			// Limit number of items.
-			resizeScoresByLevelIfNeeded(scoresByLevel);
+			synchronized(scoresByLevel) {
+				// Update
+				scoresByLevel.add(score);
+				
+				// Limit number of items.
+				resizeScoresByLevelIfNeeded(scoresByLevel);
+			}
 		}
 	}
 	
@@ -83,8 +84,10 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 			TreeSet<Score> scoresByLevel = initializeScoresByLevel(score.getLevelId()); 
 			
 			// Update
-			scoresByLevel.remove(score);
-			scoresByLevel.add(score); // sort
+			synchronized(scoresByLevel) {
+				scoresByLevel.remove(score);
+				scoresByLevel.add(score); // sort
+			}
 		}
 	}
 	
@@ -115,8 +118,11 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 	private TreeSet<Score> initializeScoresByLevel(int levelId) {
 		TreeSet<Score> scoresByLevel = scores.get(levelId);
 		if (scoresByLevel == null) {
-			scoresByLevel = new TreeSet<Score>();
-			scores.put(levelId, scoresByLevel);
+			synchronized(this) { // only create one score per time.
+				scoresByLevel = new TreeSet<Score>();
+				scores.put(levelId, scoresByLevel);
+			}
+			
 		}
 		
 		return scoresByLevel;

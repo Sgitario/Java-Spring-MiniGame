@@ -9,6 +9,7 @@ import org.jcarvajal.framework.rest.server.ServerFacade;
 import org.jcarvajal.framework.rest.servlet.DispatcherServlet;
 import org.jcarvajal.framework.utils.StringUtils;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
@@ -21,6 +22,7 @@ import com.sun.net.httpserver.HttpHandler;
 @SuppressWarnings("restriction")
 public class HttpServerFacade implements ServerFacade {
 
+	private static final int DELAY_TO_STOP = 1;
 	private static final Logger LOG = Logger.getLogger(
 			HttpServerFacade.class.getName());
 	
@@ -42,6 +44,16 @@ public class HttpServerFacade implements ServerFacade {
 		}
 		
 		return this.started;
+	}
+	
+	/**
+	 * Stop the server.
+	 */
+	public void stop() {
+		if (this.started) {
+			this.server.stop(DELAY_TO_STOP);
+			this.started = false;
+		}
 	}
 
 	/**
@@ -88,14 +100,12 @@ public class HttpServerFacade implements ServerFacade {
 	
 	private void writeResponse(HttpExchange exchange, int code, byte[] response) {
 		try {
+			prepareHeaders(exchange, code, response);
 			if (response != null) {
-				exchange.sendResponseHeaders(code, response.length);
 				OutputStream os = exchange.getResponseBody();
 		        os.write(response);
 		        os.close();
-			} else {
-				exchange.sendResponseHeaders(code, 0);
-			}			
+			}		
 			
 		} catch (IOException e) {
 			LOG.severe("Error writing http response. Cause: " + e.getMessage());
@@ -103,5 +113,18 @@ public class HttpServerFacade implements ServerFacade {
 			exchange.close();
 		}
 	}
+
+	private void prepareHeaders(HttpExchange exchange, int code, byte[] response) 
+			throws IOException {
+		Headers headers = exchange.getResponseHeaders();
+		headers.add("Content-Type", "application/text");
+		if (response != null) {
+			exchange.sendResponseHeaders(code, response.length);
+		} else {
+			exchange.sendResponseHeaders(code, 0);
+		}
+	}
+	
+	
 
 }

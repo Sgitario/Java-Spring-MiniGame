@@ -7,9 +7,11 @@
 	<name>webapp</name>
 	<properties>
 		<!-- junit -->
-		<junit.version>4.10</junit.version>
+		<junit.version>4.12</junit.version>
 		<!-- mockito -->
 		<mockito.version>1.8.4</mockito.version>
+		<!-- restassured -->
+		<restassured.version>2.5.0</restassured.version>
 	</properties>
 
 	<dependencies>
@@ -28,6 +30,15 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Rest Assured -->
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>${restassured.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
