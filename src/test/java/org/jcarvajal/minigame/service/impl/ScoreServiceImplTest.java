@@ -94,7 +94,7 @@ public class ScoreServiceImplTest {
 	}
 	
 	private void thenRepositoryGetHighScoreListInvoked() {
-		verify(this.mockRepository, times(1)).getScoreByLevelId(eq(LEVEL_ID));
+		verify(this.mockRepository, times(1)).getHighScoreListByLevel(eq(LEVEL_ID));
 	}
 	
 	private class ScoreMatcher extends BaseMatcher<Score> {

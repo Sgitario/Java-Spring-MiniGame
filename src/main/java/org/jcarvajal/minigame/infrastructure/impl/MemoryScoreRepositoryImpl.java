@@ -51,7 +51,7 @@ public class MemoryScoreRepositoryImpl implements ScoreRepository {
 		return score;
 	}
 	
-	public Collection<Score> getScoreByLevelId(int levelId) {
+	public Collection<Score> getHighScoreListByLevel(int levelId) {
 		Collection<Score> found = null;
 		if (scores.containsKey(levelId)) {
 			TreeSet<Score> scoresByLevel = scores.get(levelId);

@@ -40,6 +40,6 @@ public class ScoreServiceImpl implements ScoreService {
 	 * but this logic should be implemented in the service.
 	 */
 	public Collection<Score> getHighScoreListByLevel(int levelId) {
-		return scoreRepository.getScoreByLevelId(levelId);
+		return scoreRepository.getHighScoreListByLevel(levelId);
 	}
 }

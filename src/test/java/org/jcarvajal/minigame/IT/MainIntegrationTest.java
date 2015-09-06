@@ -1,4 +1,4 @@
-package org.jcarvajal.minigame;
+package org.jcarvajal.minigame.IT;
 
 import static org.junit.Assert.*;
 import static com.jayway.restassured.RestAssured.*;

@@ -25,7 +25,7 @@ public class IOUtilsTest {
 	}
 	
 	@After
-	public void after() {
+	public void after() { 
 		if (realIs != null) {
 			try {
 				realIs.close();

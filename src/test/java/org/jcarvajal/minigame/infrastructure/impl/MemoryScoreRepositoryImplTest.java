@@ -85,7 +85,7 @@ public class MemoryScoreRepositoryImplTest {
 	}
 	
 	private void whenRetrieveScores(int levelId) {
-		this.actual = new ArrayList<Score>(repository.getScoreByLevelId(levelId));
+		this.actual = new ArrayList<Score>(repository.getHighScoreListByLevel(levelId));
 	}
 	
 	private void whenRetrieveScore(int levelId, int userId) {
