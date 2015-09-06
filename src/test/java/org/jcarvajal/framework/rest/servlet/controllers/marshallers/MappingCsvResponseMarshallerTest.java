@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.controllers.marshallers;
+package org.jcarvajal.framework.rest.servlet.controllers.marshallers;
 
 import static org.junit.Assert.*;
 
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jcarvajal.framework.rest.controllers.marshallers.MappingCsvResponseMarshaller;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
+import org.jcarvajal.framework.rest.servlet.controllers.marshallers.MappingCsvResponseMarshaller;
 import org.junit.Test;
 
 public class MappingCsvResponseMarshallerTest {

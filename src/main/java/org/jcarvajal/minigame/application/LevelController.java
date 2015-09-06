@@ -4,11 +4,11 @@ import java.util.Collection;
 
 import org.jcarvajal.framework.di.annotations.Autowired;
 import org.jcarvajal.framework.rest.RequestMethod;
-import org.jcarvajal.framework.rest.controllers.annotations.PathVariable;
-import org.jcarvajal.framework.rest.controllers.annotations.RequestBody;
-import org.jcarvajal.framework.rest.controllers.annotations.RequestMapping;
-import org.jcarvajal.framework.rest.controllers.annotations.RequestParam;
-import org.jcarvajal.framework.rest.controllers.annotations.ResponseMapping;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.PathVariable;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestBody;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestMapping;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestParam;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.ResponseMapping;
 import org.jcarvajal.minigame.infrastructure.entities.Score;
 import org.jcarvajal.minigame.service.ScoreService;
 import org.jcarvajal.minigame.service.SessionService;

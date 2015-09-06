@@ -7,6 +7,11 @@ import org.jcarvajal.minigame.infrastructure.ScoreRepository;
 import org.jcarvajal.minigame.infrastructure.entities.Score;
 import org.jcarvajal.minigame.service.ScoreService;
 
+/**
+ * Score service implementation.
+ * @author JoseCH
+ *
+ */
 public class ScoreServiceImpl implements ScoreService {
 	@Autowired
 	private ScoreRepository scoreRepository;

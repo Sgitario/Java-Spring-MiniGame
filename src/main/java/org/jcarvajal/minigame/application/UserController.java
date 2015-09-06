@@ -3,8 +3,8 @@ package org.jcarvajal.minigame.application;
 import org.jcarvajal.framework.di.annotations.Autowired;
 import org.jcarvajal.framework.di.annotations.Init;
 import org.jcarvajal.framework.rest.RequestMethod;
-import org.jcarvajal.framework.rest.controllers.annotations.PathVariable;
-import org.jcarvajal.framework.rest.controllers.annotations.RequestMapping;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.PathVariable;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.RequestMapping;
 import org.jcarvajal.framework.scheduler.SchedulerService;
 import org.jcarvajal.minigame.service.SessionService;
 

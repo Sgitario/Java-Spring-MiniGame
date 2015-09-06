@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.controllers;
+package org.jcarvajal.framework.rest.servlet.controllers;
 
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 

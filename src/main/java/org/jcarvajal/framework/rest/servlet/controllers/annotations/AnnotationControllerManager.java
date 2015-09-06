@@ -1,8 +1,8 @@
-package org.jcarvajal.framework.rest.controllers.annotations;
+package org.jcarvajal.framework.rest.servlet.controllers.annotations;
 
 import java.lang.reflect.Method;
 
-import org.jcarvajal.framework.rest.controllers.ControllerManager;
+import org.jcarvajal.framework.rest.servlet.controllers.ControllerManager;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 
 /**

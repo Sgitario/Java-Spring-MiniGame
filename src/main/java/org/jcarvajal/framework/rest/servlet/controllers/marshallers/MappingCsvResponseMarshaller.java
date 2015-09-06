@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.controllers.marshallers;
+package org.jcarvajal.framework.rest.servlet.controllers.marshallers;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.jcarvajal.framework.rest.controllers.ResponseMarshaller;
+import org.jcarvajal.framework.rest.servlet.controllers.ResponseMarshaller;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 import org.jcarvajal.framework.utils.ReflectionUtils;
 import org.jcarvajal.framework.utils.StringUtils;

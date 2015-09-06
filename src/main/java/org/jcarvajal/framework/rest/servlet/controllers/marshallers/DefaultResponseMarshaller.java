@@ -1,6 +1,6 @@
-package org.jcarvajal.framework.rest.controllers.marshallers;
+package org.jcarvajal.framework.rest.servlet.controllers.marshallers;
 
-import org.jcarvajal.framework.rest.controllers.ResponseMarshaller;
+import org.jcarvajal.framework.rest.servlet.controllers.ResponseMarshaller;
 
 /**
  * Basic implementation of ResponseMarshaller that will marshall everything into a string 

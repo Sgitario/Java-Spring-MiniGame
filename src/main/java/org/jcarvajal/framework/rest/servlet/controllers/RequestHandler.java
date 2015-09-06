@@ -1,12 +1,12 @@
-package org.jcarvajal.framework.rest.controllers;
+package org.jcarvajal.framework.rest.servlet.controllers;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.jcarvajal.framework.rest.RequestMethod;
-import org.jcarvajal.framework.rest.controllers.annotations.params.ParamResolver;
-import org.jcarvajal.framework.rest.controllers.marshallers.DefaultResponseMarshaller;
+import org.jcarvajal.framework.rest.servlet.controllers.annotations.params.ParamResolver;
+import org.jcarvajal.framework.rest.servlet.controllers.marshallers.DefaultResponseMarshaller;
 import org.jcarvajal.framework.rest.exceptions.OnRequestException;
 import org.jcarvajal.framework.rest.exceptions.OnRequestMappingInitializationException;
 

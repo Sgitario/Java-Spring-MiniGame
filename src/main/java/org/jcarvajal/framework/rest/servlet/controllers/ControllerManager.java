@@ -1,4 +1,4 @@
-package org.jcarvajal.framework.rest.controllers;
+package org.jcarvajal.framework.rest.servlet.controllers;
 
 import java.io.InputStream;
 import java.util.ArrayList;
